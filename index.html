@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lambert Lopez — Creative Director & Designer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #E8C96A;
+      --gold-dim: #8A6B2A;
+      --black: #0A0A0A;
+      --dark: #111111;
+      --dark2: #181818;
+      --dark3: #222222;
+      --white: #F5F0E8;
+      --grey: #888888;
+      --grey-light: #BBBBBB;
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--black);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ===== CUSTOM CURSOR ===== */
+    .cursor {
+      width: 10px; height: 10px;
+      background: var(--gold);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
+    }
+    .cursor-ring {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(201, 168, 76, 0.5);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+    }
+    body:hover .cursor { opacity: 1; }
+    a:hover ~ .cursor, button:hover ~ .cursor { width: 20px; height: 20px; background: var(--gold-light); }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+
+    /* ===== NOISE OVERLAY ===== */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 1; opacity: 0.4;
+    }
+
+    /* ===== NAVIGATION ===== */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 24px 64px;
+      transition: background 0.4s ease, padding 0.3s ease;
+    }
+    nav.scrolled {
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(201,168,76,0.12);
+      padding: 16px 64px;
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--gold);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+    }
+    .nav-logo span { color: var(--white); font-weight: 300; font-style: italic; }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      color: var(--grey-light);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: -4px; left: 0; right: 0; height: 1px;
+      background: var(--gold);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+
+    /* ===== HAMBURGER (mobile) ===== */
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 24px; height: 1px; background: var(--white); transition: all 0.3s ease; }
+    .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+    .mobile-nav {
+      display: none; position: fixed; inset: 0; background: rgba(10,10,10,0.97);
+      backdrop-filter: blur(20px); z-index: 99;
+      flex-direction: column; align-items: center; justify-content: center; gap: 40px;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      color: var(--white); text-decoration: none;
+      font-family: var(--font-display); font-size: 2.4rem;
+      letter-spacing: 0.05em; transition: color 0.2s ease;
+    }
+    .mobile-nav a:hover { color: var(--gold); }
+
+    /* ===== HERO ===== */
+    #hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      justify-content: flex-end; padding: 0 64px 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 70% 40%, rgba(201,168,76,0.07) 0%, transparent 70%),
+                  radial-gradient(ellipse 50% 80% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 60%),
+                  var(--black);
+    }
+    .hero-line {
+      position: absolute; top: 0; right: 160px;
+      width: 1px; height: 45vh;
+      background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent);
+      opacity: 0.4;
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 900px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid rgba(201,168,76,0.3);
+      padding: 6px 16px; border-radius: 2px;
+      font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 32px;
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+    .hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; }
+    .hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 9vw, 8rem);
+      font-weight: 700; line-height: 0.92;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      animation: fadeUp 0.8s ease 0.4s both;
+    }
+    .hero-name .line1 { display: block; color: var(--white); }
+    .hero-name .line2 { display: block; color: var(--gold); font-style: italic; font-weight: 300; }
+    .hero-title {
+      font-family: var(--font-body);
+      font-size: clamp(0.9rem, 2vw, 1.15rem);
+      font-weight: 300; letter-spacing: 0.15em;
+      color: var(--grey-light); text-transform: uppercase;
+      margin-top: 24px; margin-bottom: 48px;
+      animation: fadeUp 0.8s ease 0.6s both;
+    }
+    .hero-cta {
+      display: flex; gap: 20px; flex-wrap: wrap;
+      animation: fadeUp 0.8s ease 0.8s both;
+    }
+    .btn-primary {
+      display: inline-block; padding: 14px 40px;
+      background: var(--gold); color: var(--black);
+      text-decoration: none; font-size: 0.78rem;
+      font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+      transition: background 0.2s ease, transform 0.2s ease;
+      border: none; cursor: pointer;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+    .btn-outline {
+      display: inline-block; padding: 14px 40px;
+      background: transparent; color: var(--gold);
+      text-decoration: none; font-size: 0.78rem;
+      font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+      border: 1px solid rgba(201,168,76,0.5);
+      transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold-light); transform: translateY(-2px); }
+    .hero-scroll {
+      position: absolute; bottom: 40px; right: 64px;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      animation: fadeUp 1s ease 1.2s both; color: var(--grey);
+      font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+    }
+    .hero-scroll::after {
+      content: '';
+      width: 1px; height: 60px;
+      background: linear-gradient(to bottom, var(--gold-dim), transparent);
+      animation: scrollLine 2s ease-in-out infinite;
+    }
+    @keyframes scrollLine { 0%,100% { opacity: 0.4; transform: scaleY(1); } 50% { opacity: 1; transform: scaleY(1.2); } }
+    .hero-numbers {
+      position: absolute; right: 64px; top: 50%;
+      transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 32px; z-index: 2;
+      animation: fadeIn 1s ease 1.4s both;
+    }
+    .hero-stat { text-align: right; }
+    .hero-stat-num {
+      font-family: var(--font-display);
+      font-size: 2.4rem; font-weight: 700;
+      color: var(--gold); line-height: 1;
+    }
+    .hero-stat-label {
+      font-size: 0.65rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--grey);
+    }
+
+    /* ===== SECTION BASE ===== */
+    section { padding: 120px 64px; position: relative; }
+    .section-label {
+      font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 16px;
+    }
+    .section-label::before { content: ''; flex: 0 0 40px; height: 1px; background: var(--gold); }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      font-weight: 700; line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .section-title em { font-style: italic; color: var(--gold); font-weight: 300; }
+    .section-divider {
+      width: 60px; height: 2px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      margin-bottom: 64px;
+    }
+
+    /* ===== ABOUT ===== */
+    #about { background: var(--dark); }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1.4fr;
+      gap: 80px; align-items: start; max-width: 1200px;
+    }
+    .about-portrait {
+      position: relative;
+    }
+    .portrait-frame {
+      position: relative; padding: 16px 0 0 16px;
+    }
+    .portrait-frame::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 70%; height: 70%;
+      border-top: 1px solid var(--gold-dim);
+      border-left: 1px solid var(--gold-dim);
+    }
+    .portrait-frame::after {
+      content: '';
+      position: absolute; bottom: -16px; right: -16px;
+      width: 70%; height: 70%;
+      border-bottom: 1px solid var(--gold-dim);
+      border-right: 1px solid var(--gold-dim);
+    }
+    .portrait-img {
+      width: 100%; aspect-ratio: 3/4;
+      background: var(--dark3);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; position: relative;
+    }
+    .portrait-img img { width: 100%; height: 100%; object-fit: cover; }
+    .portrait-placeholder {
+      text-align: center; color: var(--grey);
+      font-size: 0.8rem; letter-spacing: 0.1em;
+      padding: 20px;
+    }
+    .portrait-placeholder .icon { font-size: 3rem; margin-bottom: 12px; display: block; }
+    .about-tag {
+      position: absolute; bottom: -24px; left: 16px;
+      background: var(--gold); color: var(--black);
+      padding: 8px 20px; font-size: 0.72rem;
+      font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+    }
+    .about-text p {
+      font-size: 1.05rem; color: var(--grey-light);
+      margin-bottom: 20px; font-weight: 300;
+    }
+    .about-text p strong { color: var(--white); font-weight: 500; }
+    .about-details {
+      margin-top: 48px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+    }
+    .detail-item { border-left: 2px solid var(--gold-dim); padding-left: 16px; }
+    .detail-label { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); }
+    .detail-value { font-size: 0.95rem; color: var(--white); margin-top: 4px; }
+
+    /* ===== SKILLS ===== */
+    #skills { background: var(--black); }
+    .skills-layout {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 64px; max-width: 1200px;
+    }
+    .skill-category { margin-bottom: 40px; }
+    .skill-cat-title {
+      font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 24px; padding-bottom: 12px;
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+    }
+    .skill-list { display: flex; flex-wrap: wrap; gap: 10px; }
+    .skill-tag {
+      padding: 8px 18px; border: 1px solid rgba(201,168,76,0.2);
+      font-size: 0.8rem; color: var(--grey-light);
+      letter-spacing: 0.05em;
+      transition: all 0.25s ease; cursor: default;
+    }
+    .skill-tag:hover {
+      border-color: var(--gold); color: var(--gold);
+      background: rgba(201,168,76,0.06);
+      transform: translateY(-2px);
+    }
+    .skill-tag.featured {
+      background: rgba(201,168,76,0.1);
+      border-color: rgba(201,168,76,0.4);
+      color: var(--gold-light);
+    }
+
+    /* ===== PORTFOLIO ===== */
+    #portfolio { background: var(--dark); }
+    .portfolio-filters {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 48px;
+    }
+    .filter-btn {
+      padding: 8px 20px; background: transparent;
+      border: 1px solid rgba(201,168,76,0.2);
+      color: var(--grey); font-family: var(--font-body);
+      font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+      cursor: pointer; transition: all 0.2s ease;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--gold); color: var(--black); border-color: var(--gold);
+    }
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px; max-width: 1400px;
+    }
+    .portfolio-item {
+      position: relative; overflow: hidden;
+      aspect-ratio: 4/3;
+      background: var(--dark3);
+      cursor: pointer;
+    }
+    .portfolio-item.large { grid-column: span 2; aspect-ratio: 16/9; }
+    .portfolio-item.tall { grid-row: span 2; aspect-ratio: auto; }
+    .portfolio-thumb {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+    .portfolio-placeholder {
+      width: 100%; height: 100%; min-height: 240px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: var(--dark2);
+      color: var(--grey); font-size: 0.75rem; letter-spacing: 0.1em;
+      text-align: center; padding: 20px;
+      transition: background 0.3s ease;
+    }
+    .portfolio-placeholder .cat-icon { font-size: 2rem; margin-bottom: 8px; display: block; }
+    .portfolio-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+      opacity: 0; transition: opacity 0.4s ease;
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 24px;
+    }
+    .portfolio-item:hover .portfolio-overlay { opacity: 1; }
+    .portfolio-item:hover .portfolio-thumb { transform: scale(1.05); }
+    .portfolio-item:hover .portfolio-placeholder { background: var(--dark3); }
+    .portfolio-cat {
+      font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 6px;
+    }
+    .portfolio-ptitle {
+      font-family: var(--font-display); font-size: 1.4rem;
+      font-weight: 600; color: var(--white);
+    }
+
+    /* ===== EXPERIENCE ===== */
+    #experience { background: var(--black); }
+    .exp-layout { max-width: 900px; }
+    .exp-item {
+      display: grid; grid-template-columns: 200px 1fr;
+      gap: 40px; padding: 48px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .exp-item:last-child { border-bottom: none; }
+    .exp-meta {}
+    .exp-period {
+      font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 8px;
+    }
+    .exp-company {
+      font-family: var(--font-display); font-size: 1.1rem;
+      color: var(--white); font-weight: 600; margin-bottom: 4px;
+    }
+    .exp-location { font-size: 0.78rem; color: var(--grey); }
+    .exp-content {}
+    .exp-role {
+      font-family: var(--font-display); font-size: 1.6rem;
+      font-weight: 700; margin-bottom: 16px; color: var(--white);
+    }
+    .exp-desc {
+      font-size: 0.9rem; color: var(--grey-light);
+      line-height: 1.8; margin-bottom: 20px;
+    }
+    .exp-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .exp-tag {
+      font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gold-dim); padding: 4px 12px;
+      border: 1px solid rgba(201,168,76,0.15);
+    }
+    .exp-current {
+      display: inline-block; margin-left: 12px;
+      background: var(--gold); color: var(--black);
+      font-size: 0.6rem; font-weight: 700;
+      padding: 2px 8px; letter-spacing: 0.15em; text-transform: uppercase;
+      vertical-align: middle;
+    }
+
+    /* ===== CONTACT ===== */
+    #contact {
+      background: var(--dark);
+      min-height: 60vh; display: flex; flex-direction: column; justify-content: center;
+    }
+    .contact-layout {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; max-width: 1200px; align-items: start;
+    }
+    .contact-info p {
+      font-size: 1rem; color: var(--grey-light);
+      margin-bottom: 40px; max-width: 440px;
+    }
+    .contact-items { display: flex; flex-direction: column; gap: 24px; }
+    .contact-item {
+      display: flex; gap: 20px; align-items: flex-start;
+    }
+    .contact-icon {
+      width: 40px; height: 40px; flex-shrink: 0;
+      border: 1px solid rgba(201,168,76,0.3);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); font-size: 1rem;
+    }
+    .contact-text .label {
+      font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey);
+    }
+    .contact-text .value {
+      font-size: 0.95rem; color: var(--white); margin-top: 4px;
+    }
+    .contact-text a { color: var(--white); text-decoration: none; transition: color 0.2s ease; }
+    .contact-text a:hover { color: var(--gold); }
+    .contact-form { display: flex; flex-direction: column; gap: 20px; }
+    .form-group { position: relative; }
+    .form-group label {
+      display: block; font-size: 0.65rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--grey); margin-bottom: 10px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%; background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--white); font-family: var(--font-body); font-size: 0.9rem;
+      padding: 14px 16px; outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { border-color: var(--gold); }
+    .form-group textarea { height: 120px; resize: vertical; }
+    .form-group select { cursor: pointer; appearance: none; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-submit {
+      padding: 16px 40px; background: var(--gold); color: var(--black);
+      border: none; font-family: var(--font-body); font-size: 0.78rem;
+      font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.2s ease, transform 0.2s ease;
+      align-self: flex-start;
+    }
+    .form-submit:hover { background: var(--gold-light); transform: translateY(-2px); }
+    .form-success {
+      display: none; padding: 16px; background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.3);
+      color: var(--gold); font-size: 0.85rem; letter-spacing: 0.05em;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--black);
+      border-top: 1px solid rgba(201,168,76,0.1);
+      padding: 40px 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-logo {
+      font-family: var(--font-display); font-size: 1.2rem;
+      font-weight: 600; color: var(--gold); letter-spacing: 0.08em;
+    }
+    .footer-logo span { color: var(--grey); font-weight: 300; font-style: italic; font-size: 0.9rem; }
+    .footer-copy { font-size: 0.75rem; color: var(--grey); letter-spacing: 0.05em; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 0.75rem; color: var(--grey);
+      text-decoration: none; letter-spacing: 0.1em;
+      transition: color 0.2s ease;
+    }
+    .footer-links a:hover { color: var(--gold); }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .reveal {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ===== GOLD LINE DIVIDER ===== */
+    .gold-line {
+      width: 100%; height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
+      margin: 0;
+    }
+
+    /* ===== MARQUEE ===== */
+    .marquee-wrap {
+      overflow: hidden; background: var(--gold);
+      padding: 14px 0; white-space: nowrap;
+    }
+    .marquee-track {
+      display: inline-flex; gap: 0;
+      animation: marquee 20s linear infinite;
+    }
+    .marquee-track span {
+      color: var(--black); font-size: 0.72rem;
+      font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase; padding: 0 40px;
+    }
+    .marquee-track span.sep { color: rgba(0,0,0,0.3); padding: 0 4px; }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      nav { padding: 20px 32px; }
+      nav.scrolled { padding: 14px 32px; }
+      section { padding: 80px 32px; }
+      #hero { padding: 0 32px 80px; }
+      .hero-numbers { display: none; }
+      .about-grid { grid-template-columns: 1fr; }
+      .skills-layout { grid-template-columns: 1fr; }
+      .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
+      .portfolio-item.large { grid-column: span 2; }
+      .exp-item { grid-template-columns: 1fr; gap: 16px; }
+      .contact-layout { grid-template-columns: 1fr; gap: 48px; }
+      footer { flex-direction: column; gap: 20px; text-align: center; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 18px 24px; }
+      nav.scrolled { padding: 14px 24px; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      section { padding: 64px 24px; }
+      #hero { padding: 0 24px 64px; }
+      .hero-scroll { right: 24px; }
+      .portfolio-grid { grid-template-columns: 1fr; }
+      .portfolio-item.large { grid-column: span 1; }
+      .portfolio-item.tall { grid-row: span 1; }
+      .form-row { grid-template-columns: 1fr; }
+      footer { padding: 32px 24px; }
+    }
+    @media (max-width: 480px) {
+      .hero-name { font-size: 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ===== NAVIGATION ===== -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">Lambert<span> Lopez</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMobileNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#about" onclick="toggleMobileNav()">About</a>
+  <a href="#skills" onclick="toggleMobileNav()">Skills</a>
+  <a href="#portfolio" onclick="toggleMobileNav()">Portfolio</a>
+  <a href="#experience" onclick="toggleMobileNav()">Experience</a>
+  <a href="#contact" onclick="toggleMobileNav()">Contact</a>
+</div>
+
+<!-- ===== HERO ===== -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-line"></div>
+
+  <div class="hero-numbers">
+    <div class="hero-stat">
+      <div class="hero-stat-num">8+</div>
+      <div class="hero-stat-label">Years Experience</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">100+</div>
+      <div class="hero-stat-label">Projects Delivered</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">4</div>
+      <div class="hero-stat-label">Countries Served</div>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-badge">Available for Freelance &amp; Full-time</div>
+    <h1 class="hero-name">
+      <span class="line1">Lambert</span>
+      <span class="line2">Lopez</span>
+    </h1>
+    <p class="hero-title">Creative Director &nbsp;/&nbsp; Graphic Designer &nbsp;/&nbsp; Web &amp; Mobile Developer</p>
+    <div class="hero-cta">
+      <a href="#portfolio" class="btn-primary">View My Work</a>
+      <a href="#contact" class="btn-outline">Get In Touch</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- Marquee -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>Graphic Design</span><span class="sep">✦</span>
+    <span>Creative Direction</span><span class="sep">✦</span>
+    <span>Web Development</span><span class="sep">✦</span>
+    <span>Mobile Apps</span><span class="sep">✦</span>
+    <span>UI/UX Design</span><span class="sep">✦</span>
+    <span>Brand Strategy</span><span class="sep">✦</span>
+    <span>Digital Art</span><span class="sep">✦</span>
+    <span>Motion Graphics</span><span class="sep">✦</span>
+    <!-- duplicate for seamless loop -->
+    <span>Graphic Design</span><span class="sep">✦</span>
+    <span>Creative Direction</span><span class="sep">✦</span>
+    <span>Web Development</span><span class="sep">✦</span>
+    <span>Mobile Apps</span><span class="sep">✦</span>
+    <span>UI/UX Design</span><span class="sep">✦</span>
+    <span>Brand Strategy</span><span class="sep">✦</span>
+    <span>Digital Art</span><span class="sep">✦</span>
+    <span>Motion Graphics</span><span class="sep">✦</span>
+  </div>
+</div>
+
+<!-- ===== ABOUT ===== -->
+<section id="about">
+  <div class="section-label reveal">About Me</div>
+  <h2 class="section-title reveal reveal-delay-1">The Creative <em>Behind</em><br>the Vision</h2>
+  <div class="section-divider reveal reveal-delay-2"></div>
+
+  <div class="about-grid">
+    <div class="about-portrait reveal reveal-delay-2">
+      <div class="portrait-frame">
+        <div class="portrait-img">
+          <img src="assets/lambert.jpg" alt="Lambert Lopez" style="width:100%;height:100%;object-fit:cover;" />
+        </div>
+        <div class="about-tag">Founder — Tracework Studio</div>
+      </div>
+    </div>
+    <div class="about-text reveal reveal-delay-3">
+      <p>I am <strong>Lambert Vine Gil Lopez</strong> — a creative director, graphic designer, and full-stack digital professional based in Sampaloc, Manila. I blend artistic vision with technical execution to deliver digital solutions that are both beautiful and functional.</p>
+      <p>With over <strong>8 years of hands-on experience</strong> across print, digital, web, and mobile platforms, I've worked with clients from Cambodia, Saudi Arabia, the Philippines, and beyond — producing campaigns, brand identities, and interactive platforms that drive real results.</p>
+      <p>Currently, I run <strong>Tracework Creative Printing & Designing Studio</strong> in Manila — a full-service creative studio specializing in design, printing, web development, and mobile app solutions.</p>
+      <p>I am fluent in the full <strong>Adobe Creative Suite</strong>, proficient in React Native, Next.js, and modern web frameworks, and deeply passionate about the intersection of storytelling, design, and technology.</p>
+
+      <div class="about-details">
+        <div class="detail-item">
+          <div class="detail-label">Location</div>
+          <div class="detail-value">Sampaloc, Manila, PH</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Email</div>
+          <div class="detail-value"><a href="mailto:karldele01@gmail.com" style="color:var(--white);text-decoration:none">karldele01@gmail.com</a></div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Phone</div>
+          <div class="detail-value">+63 928 245 8718</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Studio</div>
+          <div class="detail-value">Tracework Creative Studio</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-line"></div>
+
+<!-- ===== SKILLS ===== -->
+<section id="skills">
+  <div class="section-label reveal">What I Do</div>
+  <h2 class="section-title reveal reveal-delay-1">Skills &amp; <em>Expertise</em></h2>
+  <div class="section-divider reveal reveal-delay-2"></div>
+
+  <div class="skills-layout">
+    <div class="reveal reveal-delay-2">
+      <div class="skill-category">
+        <div class="skill-cat-title">Design & Creative</div>
+        <div class="skill-list">
+          <span class="skill-tag featured">Photoshop</span>
+          <span class="skill-tag featured">Illustrator</span>
+          <span class="skill-tag featured">InDesign</span>
+          <span class="skill-tag featured">After Effects</span>
+          <span class="skill-tag">Premiere Pro</span>
+          <span class="skill-tag">Visual Design</span>
+          <span class="skill-tag">Branding</span>
+          <span class="skill-tag">Motion Graphics</span>
+          <span class="skill-tag">Digital Illustration</span>
+          <span class="skill-tag">Typography</span>
+          <span class="skill-tag">Print Design</span>
+          <span class="skill-tag">3D Mockups</span>
+        </div>
+      </div>
+      <div class="skill-category">
+        <div class="skill-cat-title">Creative Strategy</div>
+        <div class="skill-list">
+          <span class="skill-tag">Creative Direction</span>
+          <span class="skill-tag">Concept Development</span>
+          <span class="skill-tag">Visual Storytelling</span>
+          <span class="skill-tag">Brand Strategy</span>
+          <span class="skill-tag">Digital Content Creation</span>
+          <span class="skill-tag">Campaign Management</span>
+        </div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-3">
+      <div class="skill-category">
+        <div class="skill-cat-title">Web & Mobile Development</div>
+        <div class="skill-list">
+          <span class="skill-tag featured">React Native</span>
+          <span class="skill-tag featured">Next.js</span>
+          <span class="skill-tag featured">Web Development</span>
+          <span class="skill-tag">Responsive Websites</span>
+          <span class="skill-tag">UI/UX Design</span>
+          <span class="skill-tag">Expo</span>
+          <span class="skill-tag">Mobile App Dev</span>
+          <span class="skill-tag">Cross-Platform Apps</span>
+          <span class="skill-tag">SEO Optimization</span>
+          <span class="skill-tag">Performance Optimization</span>
+        </div>
+      </div>
+      <div class="skill-category">
+        <div class="skill-cat-title">Business & Operations</div>
+        <div class="skill-list">
+          <span class="skill-tag">Client Relations</span>
+          <span class="skill-tag">Project Management</span>
+          <span class="skill-tag">Agile / Scrum</span>
+          <span class="skill-tag">CRM Tools</span>
+          <span class="skill-tag">Business Development</span>
+          <span class="skill-tag">Team Leadership</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-line"></div>
+
+<!-- ===== PORTFOLIO ===== -->
+<section id="portfolio">
+  <div class="section-label reveal">Selected Works</div>
+  <h2 class="section-title reveal reveal-delay-1">Portfolio &amp; <em>Projects</em></h2>
+  <div class="section-divider reveal reveal-delay-2"></div>
+
+  <div class="portfolio-filters reveal reveal-delay-2">
+    <button class="filter-btn active" onclick="filterPortfolio('all', this)">All Work</button>
+    <button class="filter-btn" onclick="filterPortfolio('branding', this)">Branding</button>
+    <button class="filter-btn" onclick="filterPortfolio('digital', this)">Digital Art</button>
+    <button class="filter-btn" onclick="filterPortfolio('print', this)">Print / Posters</button>
+    <button class="filter-btn" onclick="filterPortfolio('web', this)">Web & App</button>
+    <button class="filter-btn" onclick="filterPortfolio('merch', this)">Merchandise</button>
+  </div>
+
+  <div class="portfolio-grid reveal reveal-delay-3" id="portfolioGrid">
+
+    <div class="portfolio-item large" data-cat="digital">
+      <img class="portfolio-thumb" src="assets/portfolio/digital-portrait-hijab.jpg" alt="Hyper-Realistic Portrait Study" loading="lazy" />
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">Digital Art</div>
+        <div class="portfolio-ptitle">Hyper-Realistic Portrait Study</div>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-cat="branding">
+      <img class="portfolio-thumb" src="assets/portfolio/casino-banners.jpg" alt="Casino Welcome Banners" loading="lazy" />
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">Brand Design</div>
+        <div class="portfolio-ptitle">Casino Welcome Banners</div>
+      </div>
+    </div>
+
+    <div class="portfolio-item tall" data-cat="digital">
+      <img class="portfolio-thumb" src="assets/portfolio/digital-portrait-hijab.jpg" alt="Niqab Portrait — Digital Study" loading="lazy" />
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">Vector Art</div>
+        <div class="portfolio-ptitle">Niqab Portrait — Digital Study</div>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-cat="print">
+      <img class="portfolio-thumb" src="assets/portfolio/posters-labour-day.jpg" alt="Holiday Campaign Posters" loading="lazy" />
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">Print Design</div>
+        <div class="portfolio-ptitle">Holiday Campaign Posters</div>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-cat="print">
+      <img class="portfolio-thumb" src="assets/portfolio/posters-pi-mai-lao.jpg" alt="First Cryptocurrency iGaming Poster" loading="lazy" />
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">Brand / Print</div>
+        <div class="portfolio-ptitle">First Cryptocurrency iGaming Poster</div>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-cat="merch">
+      <img class="portfolio-thumb" src="assets/portfolio/tshirt-wiz-khalifa.jpg" alt="T-Shirt Graphic Design" loading="lazy" />
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">Merchandise</div>
+        <div class="portfolio-ptitle">T-Shirt Graphic Design</div>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-cat="digital">
+      <img class="portfolio-thumb" src="assets/portfolio/family-portrait-vector.jpg" alt="Family Portrait — Vector Style" loading="lazy" />
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">Vector Art</div>
+        <div class="portfolio-ptitle">Family Portrait — Vector Style</div>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-cat="merch">
+      <img class="portfolio-thumb" src="assets/portfolio/embroidery-ai-mockup.jpg" alt="3D Embroidery AI Mockup" loading="lazy" />
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">3D / Merchandise</div>
+        <div class="portfolio-ptitle">3D Embroidery AI Mockup</div>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-cat="branding">
+      <img class="portfolio-thumb" src="assets/portfolio/ornament-3d.jpg" alt="MTS Holiday Ornament Design" loading="lazy" />
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">3D Design</div>
+        <div class="portfolio-ptitle">MTS Holiday Ornament Design</div>
+      </div>
+    </div>
+
+    <div class="portfolio-item large" data-cat="web">
+      <div class="portfolio-placeholder">
+        <span class="cat-icon">💻</span>
+        <strong style="color:var(--white)">Web & Mobile Development</strong><br/>
+        React Native • Next.js • Responsive Websites
+      </div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">Web & App</div>
+        <div class="portfolio-ptitle">Full-Stack Web & Mobile Projects</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="text-align:center; margin-top:64px;" class="reveal">
+    <p style="color:var(--grey); font-size:0.85rem; letter-spacing:0.08em; margin-bottom:24px;">
+      ✦ &nbsp; More works available upon request &nbsp; ✦
+    </p>
+    <a href="mailto:karldele01@gmail.com" class="btn-outline">Request Full Portfolio</a>
+  </div>
+</section>
+
+<div class="gold-line"></div>
+
+<!-- ===== EXPERIENCE ===== -->
+<section id="experience">
+  <div class="section-label reveal">Career</div>
+  <h2 class="section-title reveal reveal-delay-1">Work <em>Experience</em></h2>
+  <div class="section-divider reveal reveal-delay-2"></div>
+
+  <div class="exp-layout">
+
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">Jan 2025 — Present</div>
+        <div class="exp-company">Tracework Creative Studio</div>
+        <div class="exp-location">Sampaloc, Manila</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Founder &amp; Creative Lead <span class="exp-current">Current</span></div>
+        <p class="exp-desc">Established and manage a multi-service creative studio specializing in graphic design, printing, web development, and mobile app solutions. Lead end-to-end client projects, directing creative strategy for both local and international clients, and drive innovation through AI-powered workflows.</p>
+        <div class="exp-tags">
+          <span class="exp-tag">Creative Direction</span>
+          <span class="exp-tag">Web Development</span>
+          <span class="exp-tag">Mobile Apps</span>
+          <span class="exp-tag">Brand Strategy</span>
+          <span class="exp-tag">Business Operations</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item reveal reveal-delay-1">
+      <div class="exp-meta">
+        <div class="exp-period">Oct — Dec 2025</div>
+        <div class="exp-company">Concentrix Philippines</div>
+        <div class="exp-location">Sta. Cruz, Manila</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Advisor I (Macy's DCS — Seasonal)</div>
+        <p class="exp-desc">Provided high-quality customer support for Macy's DCS. Resolved technical and billing issues, consistently meeting KPIs (AHT, CSAT, FCR). Earned full Performance Bonus for the season and contributed to team development by mentoring new hires.</p>
+        <div class="exp-tags">
+          <span class="exp-tag">Salesforce</span>
+          <span class="exp-tag">Zendesk</span>
+          <span class="exp-tag">Customer Experience</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item reveal reveal-delay-1">
+      <div class="exp-meta">
+        <div class="exp-period">Mar 2024 — Dec 2024</div>
+        <div class="exp-company">Philexcel / Alorica</div>
+        <div class="exp-location">Clark, Angeles, Pampanga</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Graphic Artist &amp; CX Agent</div>
+        <p class="exp-desc">Delivered creative design solutions for clients including Equitex.com and SeaBass Fishermans. Specialized in graphic arts, proofing, and recreating art files ensuring accuracy for client branding needs. Simultaneously supported T-Mobile customers through expert technical support.</p>
+        <div class="exp-tags">
+          <span class="exp-tag">Photoshop</span>
+          <span class="exp-tag">Illustrator</span>
+          <span class="exp-tag">Branding</span>
+          <span class="exp-tag">Print Production</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item reveal reveal-delay-1">
+      <div class="exp-meta">
+        <div class="exp-period">2022</div>
+        <div class="exp-company">Jalsat Al-Reef</div>
+        <div class="exp-location">Al Jubail, Saudi Arabia</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Graphic Designer</div>
+        <p class="exp-desc">Designed dynamic banners, posters, social media posts, and animated QR code menus. Developed cohesive visual identities aligned with brand guidelines, producing high-impact seasonal marketing assets to amplify audience engagement across digital platforms.</p>
+        <div class="exp-tags">
+          <span class="exp-tag">Photoshop CC</span>
+          <span class="exp-tag">Illustrator CC</span>
+          <span class="exp-tag">Premiere CC</span>
+          <span class="exp-tag">After Effects</span>
+          <span class="exp-tag">Social Media</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item reveal reveal-delay-1">
+      <div class="exp-meta">
+        <div class="exp-period">Jan 2019 — 2022</div>
+        <div class="exp-company">Lucky Ruby Casino</div>
+        <div class="exp-location">Svay Rieng, Cambodia</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Graphic Designer</div>
+        <p class="exp-desc">Designed web banners, posters, social media content, and promotional collateral across multiple casino brands. Developed animation to enhance visual storytelling and maintained a consistent, fresh online presence across all digital platforms.</p>
+        <div class="exp-tags">
+          <span class="exp-tag">Photoshop</span>
+          <span class="exp-tag">Illustrator</span>
+          <span class="exp-tag">Premiere Pro</span>
+          <span class="exp-tag">Animation</span>
+          <span class="exp-tag">Digital Marketing</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item reveal reveal-delay-1">
+      <div class="exp-meta">
+        <div class="exp-period">Sep 2018</div>
+        <div class="exp-company">King Graphics Design</div>
+        <div class="exp-location">Guagua, Pampanga</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Graphic Artist / Graphic Applicator</div>
+        <p class="exp-desc">Delivered a wide range of graphic design and print application services for local clients. Handled design, production, and physical application of graphics across various media formats.</p>
+        <div class="exp-tags">
+          <span class="exp-tag">Print Design</span>
+          <span class="exp-tag">Photoshop</span>
+          <span class="exp-tag">Illustrator</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item reveal reveal-delay-1">
+      <div class="exp-meta">
+        <div class="exp-period">Dec 2017</div>
+        <div class="exp-company">Aira Printing Press</div>
+        <div class="exp-location">Guagua, Pampanga</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Graphic Artist</div>
+        <p class="exp-desc">Expert in T-shirt printing, mug printing, bookbinding, tarpaulins, brochures, and acrylic bending. Produced custom print-ready graphics consistently adhering to client specifications and brand guidelines.</p>
+        <div class="exp-tags">
+          <span class="exp-tag">Photoshop</span>
+          <span class="exp-tag">Illustrator</span>
+          <span class="exp-tag">CorelDraw</span>
+          <span class="exp-tag">InDesign</span>
+          <span class="exp-tag">Print Production</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="gold-line"></div>
+
+<!-- ===== CONTACT ===== -->
+<section id="contact">
+  <div class="section-label reveal">Let's Work Together</div>
+  <h2 class="section-title reveal reveal-delay-1">Get In <em>Touch</em></h2>
+  <div class="section-divider reveal reveal-delay-2"></div>
+
+  <div class="contact-layout">
+    <div class="contact-info reveal reveal-delay-2">
+      <p>Whether you need a bold brand identity, a high-converting website, a polished mobile app, or a full creative campaign — I'm here to bring your vision to life. Let's build something remarkable together.</p>
+      <div class="contact-items">
+        <div class="contact-item">
+          <div class="contact-icon">✉</div>
+          <div class="contact-text">
+            <div class="label">Email</div>
+            <div class="value"><a href="mailto:karldele01@gmail.com">karldele01@gmail.com</a></div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📱</div>
+          <div class="contact-text">
+            <div class="label">Phone / WhatsApp</div>
+            <div class="value"><a href="tel:+639282458718">+63 928 245 8718</a></div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div class="contact-text">
+            <div class="label">Location</div>
+            <div class="value">Sampaloc, Manila, Metro Manila 1008, Philippines</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🏢</div>
+          <div class="contact-text">
+            <div class="label">Studio</div>
+            <div class="value">Tracework Creative Printing &amp; Designing Studio</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal reveal-delay-3">
+      <form class="contact-form" id="contactForm" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fname">First Name</label>
+            <input type="text" id="fname" name="fname" placeholder="John" required />
+          </div>
+          <div class="form-group">
+            <label for="lname">Last Name</label>
+            <input type="text" id="lname" name="lname" placeholder="Doe" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="you@company.com" required />
+        </div>
+        <div class="form-group">
+          <label for="project">Project Type</label>
+          <select id="project" name="project">
+            <option value="" disabled selected>Select a service...</option>
+            <option value="branding">Branding & Identity</option>
+            <option value="web">Website Development</option>
+            <option value="mobile">Mobile App Development</option>
+            <option value="print">Print Design</option>
+            <option value="social">Social Media / Campaign</option>
+            <option value="other">Other / Multiple Services</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="Tell me about your project, timeline, and budget..." required></textarea>
+        </div>
+        <button type="submit" class="form-submit">Send Message ›</button>
+        <div class="form-success" id="formSuccess">
+          ✦ &nbsp; Message sent! I'll get back to you within 24–48 hours.
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-logo">Lambert Lopez <span>— Creative Director</span></div>
+  <div class="footer-copy">© 2026 Lambert Vine Gil Lopez. All rights reserved.</div>
+  <div class="footer-links">
+    <a href="mailto:karldele01@gmail.com">Email</a>
+    <a href="https://linkedin.com/in/YOUR-LINKEDIN-HERE" target="_blank">LinkedIn</a>
+    <a href="https://github.com/YOUR-GITHUB-HERE" target="_blank">GitHub</a>
+    <a href="https://www.facebook.com/YOUR-FACEBOOK-HERE" target="_blank">Facebook</a>
+    <a href="#portfolio">Portfolio</a>
+    <a href="#contact">Hire Me</a>
+  </div>
+</footer>
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+  // ── Custom cursor ──
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animateCursor() {
+    cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+  document.querySelectorAll('a, button, .filter-btn, .portfolio-item').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.width = '20px'; cursor.style.height = '20px'; ring.style.width = '60px'; ring.style.height = '60px'; });
+    el.addEventListener('mouseleave', () => { cursor.style.width = '10px'; cursor.style.height = '10px'; ring.style.width = '36px'; ring.style.height = '36px'; });
+  });
+
+  // ── Navbar scroll ──
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // ── Mobile nav ──
+  function toggleMobileNav() {
+    const nav = document.getElementById('mobileNav');
+    const ham = document.getElementById('hamburger');
+    nav.classList.toggle('open');
+    ham.classList.toggle('open');
+  }
+
+  // ── Scroll reveal ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ── Portfolio filter ──
+  function filterPortfolio(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.portfolio-item').forEach(item => {
+      const show = cat === 'all' || item.dataset.cat === cat;
+      item.style.display = show ? '' : 'none';
+    });
+  }
+
+  // ── Contact form ──
+  async function handleSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('.form-submit');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  const response = await fetch('https://formspree.io/f/mdalljle', {
+    method: 'POST',
+    body: new FormData(e.target),
+    headers: { 'Accept': 'application/json' }
+  });
+
+  if (response.ok) {
+    document.getElementById('formSuccess').style.display = 'block';
+    btn.textContent = 'Sent ✓';
+    e.target.reset();
+  } else {
+    btn.textContent = 'Error — Try Again';
+    btn.disabled = false;
+  }
+}
+</script>
+
+</body>
+</html>
