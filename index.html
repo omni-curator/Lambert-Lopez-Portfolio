@@ -1,615 +1,293 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lambert Lopez â€” Creative Director & Designer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <style>
-    /* ===== RESET & BASE ===== */
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --gold: #C9A84C;
-      --gold-light: #E8C96A;
-      --gold-dim: #8A6B2A;
-      --black: #0A0A0A;
-      --dark: #111111;
-      --dark2: #181818;
-      --dark3: #222222;
-      --white: #F5F0E8;
-      --grey: #888888;
-      --grey-light: #BBBBBB;
-      --font-display: 'Cormorant Garamond', Georgia, serif;
-      --font-body: 'DM Sans', sans-serif;
-    }
-    html { scroll-behavior: smooth; }
-    body {
-      background-color: var(--black);
-      color: var(--white);
-      font-family: var(--font-body);
-      font-weight: 300;
-      line-height: 1.7;
-      overflow-x: hidden;
-      cursor: none;
-    }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lambert Lopez — Omni Creator | Creative Director</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,300;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#C9A84C;--gold2:#E8C96A;--gold3:rgba(201,168,76,0.15);
+  --black:#080808;--dark:#111;--dark2:#161616;--dark3:#1e1e1e;
+  --white:#F5F0E8;--grey:#777;--grey2:#aaa;
+  --font-hero:'Bebas Neue',sans-serif;
+  --font-display:'Cormorant Garamond',serif;
+  --font-body:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-weight:300;overflow-x:hidden;cursor:none}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--black)}
+::-webkit-scrollbar-thumb{background:var(--gold)}
 
-    /* ===== CUSTOM CURSOR ===== */
-    .cursor {
-      width: 10px; height: 10px;
-      background: var(--gold);
-      border-radius: 50%;
-      position: fixed; top: 0; left: 0;
-      pointer-events: none; z-index: 9999;
-      transform: translate(-50%, -50%);
-      transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
-    }
-    .cursor-ring {
-      width: 36px; height: 36px;
-      border: 1px solid rgba(201, 168, 76, 0.5);
-      border-radius: 50%;
-      position: fixed; top: 0; left: 0;
-      pointer-events: none; z-index: 9998;
-      transform: translate(-50%, -50%);
-      transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
-    }
-    body:hover .cursor { opacity: 1; }
-    a:hover ~ .cursor, button:hover ~ .cursor { width: 20px; height: 20px; background: var(--gold-light); }
+/* CURSOR */
+#cur{width:8px;height:8px;background:var(--gold);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s}
+#cur-ring{width:40px;height:40px;border:1px solid rgba(201,168,76,.4);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s}
+body.hov #cur{width:16px;height:16px;background:var(--gold2)}
+body.hov #cur-ring{width:64px;height:64px}
 
-    /* ===== SCROLLBAR ===== */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--black); }
-    ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+/* LOADER */
+#loader{position:fixed;inset:0;background:var(--black);z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s ease,visibility .8s ease}
+#loader.gone{opacity:0;visibility:hidden}
+.ld-logo{font-family:var(--font-hero);font-size:clamp(3rem,10vw,8rem);color:transparent;-webkit-text-stroke:1px var(--gold);letter-spacing:.1em;animation:fu .8s ease forwards}
+.ld-sub{font-size:.7rem;letter-spacing:.4em;text-transform:uppercase;color:var(--grey);margin-top:12px;animation:fu .8s ease .2s both}
+.ld-bar{width:200px;height:1px;background:rgba(201,168,76,.15);margin-top:40px;overflow:hidden}
+.ld-fill{height:100%;background:var(--gold);animation:bar 1.8s ease forwards}
+@keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bar{from{width:0}to{width:100%}}
 
-    /* ===== NOISE OVERLAY ===== */
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none; z-index: 1; opacity: 0.4;
-    }
+/* PARTICLES */
+#particles{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
 
-    /* ===== NAVIGATION ===== */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 24px 64px;
-      transition: background 0.4s ease, padding 0.3s ease;
-    }
-    nav.scrolled {
-      background: rgba(10,10,10,0.92);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(201,168,76,0.12);
-      padding: 16px 64px;
-    }
-    .nav-logo {
-      font-family: var(--font-display);
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: var(--gold);
-      text-decoration: none;
-      letter-spacing: 0.08em;
-    }
-    .nav-logo span { color: var(--white); font-weight: 300; font-style: italic; }
-    .nav-links { display: flex; gap: 36px; list-style: none; }
-    .nav-links a {
-      color: var(--grey-light);
-      text-decoration: none;
-      font-size: 0.78rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      transition: color 0.2s ease;
-      position: relative;
-    }
-    .nav-links a::after {
-      content: '';
-      position: absolute; bottom: -4px; left: 0; right: 0; height: 1px;
-      background: var(--gold);
-      transform: scaleX(0); transform-origin: left;
-      transition: transform 0.3s ease;
-    }
-    .nav-links a:hover { color: var(--gold); }
-    .nav-links a:hover::after { transform: scaleX(1); }
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:28px 64px;transition:all .4s ease}
+nav.scrolled{background:rgba(8,8,8,.93);backdrop-filter:blur(20px);padding:16px 64px;border-bottom:1px solid rgba(201,168,76,.08)}
+.nav-logo{font-family:var(--font-hero);font-size:1.6rem;letter-spacing:.12em;color:var(--gold);text-decoration:none;line-height:1}
+.nav-logo span{color:var(--grey);font-family:var(--font-display);font-style:italic;font-weight:300;font-size:.9rem;display:block;letter-spacing:.18em;margin-top:-4px}
+.nav-links{display:flex;gap:40px;list-style:none}
+.nav-links a{color:var(--grey2);text-decoration:none;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;position:relative;transition:color .2s}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.nav-links a:hover{color:var(--gold)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer}
+.hamburger span{display:block;width:24px;height:1px;background:var(--white);transition:all .3s}
+.hamburger.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+.mob-menu{display:none;position:fixed;inset:0;background:rgba(8,8,8,.97);backdrop-filter:blur(20px);z-index:99;flex-direction:column;align-items:center;justify-content:center;gap:48px}
+.mob-menu.open{display:flex}
+.mob-menu a{font-family:var(--font-hero);font-size:3rem;letter-spacing:.1em;color:var(--white);text-decoration:none;transition:color .2s}
+.mob-menu a:hover{color:var(--gold)}
 
-    /* ===== HAMBURGER (mobile) ===== */
-    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
-    .hamburger span { display: block; width: 24px; height: 1px; background: var(--white); transition: all 0.3s ease; }
-    .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
-    .hamburger.open span:nth-child(2) { opacity: 0; }
-    .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
-    .mobile-nav {
-      display: none; position: fixed; inset: 0; background: rgba(10,10,10,0.97);
-      backdrop-filter: blur(20px); z-index: 99;
-      flex-direction: column; align-items: center; justify-content: center; gap: 40px;
-    }
-    .mobile-nav.open { display: flex; }
-    .mobile-nav a {
-      color: var(--white); text-decoration: none;
-      font-family: var(--font-display); font-size: 2.4rem;
-      letter-spacing: 0.05em; transition: color 0.2s ease;
-    }
-    .mobile-nav a:hover { color: var(--gold); }
+/* HERO */
+#hero{min-height:100vh;position:relative;display:flex;align-items:flex-end;padding:0 64px 80px;overflow:hidden;z-index:1}
+.hero-bg-word{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-hero);font-size:clamp(10rem,22vw,24rem);color:transparent;-webkit-text-stroke:1px rgba(201,168,76,.05);letter-spacing:.05em;white-space:nowrap;pointer-events:none;animation:drift 20s ease-in-out infinite alternate}
+@keyframes drift{from{transform:translate(-50%,-50%) scale(1)}to{transform:translate(-50%,-52%) scale(1.04)}}
+.hero-diag{position:absolute;top:0;right:0;width:45%;height:100%;background:linear-gradient(135deg,transparent,rgba(201,168,76,.03),transparent);clip-path:polygon(20% 0,100% 0,100% 100%,0% 100%)}
+.hero-grid-line{position:absolute;inset:0;pointer-events:none}
+.hero-grid-line::before{content:'';position:absolute;top:0;left:40%;width:1px;height:100%;background:linear-gradient(to bottom,transparent,rgba(201,168,76,.1),transparent)}
+.hero-grid-line::after{content:'';position:absolute;top:28%;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,.07),transparent)}
+.hero-c{position:relative;z-index:2;max-width:1000px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;animation:fu .8s ease .5s both}
+.hero-eyebrow::before{content:'';width:32px;height:1px;background:var(--gold)}
+.hero-name{font-family:var(--font-hero);font-size:clamp(5rem,14vw,14rem);line-height:.88;letter-spacing:.02em}
+.hero-name .n1{display:block;animation:sil 1s cubic-bezier(.16,1,.3,1) .2s both}
+.hero-name .n2{display:block;color:transparent;-webkit-text-stroke:2px var(--gold);animation:sil 1s cubic-bezier(.16,1,.3,1) .35s both}
+@keyframes sil{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:translateX(0)}}
+.hero-tag{font-family:var(--font-display);font-size:clamp(.95rem,2.2vw,1.5rem);font-weight:300;font-style:italic;color:var(--grey2);margin:16px 0 0;animation:fu .8s ease .7s both}
+.hero-tag strong{color:var(--gold);font-style:normal;font-weight:600}
+.hero-tw{font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;color:var(--grey);margin:20px 0 48px;animation:fu .8s ease .9s both}
+.hero-tw span#tw{color:var(--white)}
+.blink{display:inline-block;width:2px;height:.9em;background:var(--gold);vertical-align:middle;animation:bl 1s infinite}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:0}}
+.hero-cta{display:flex;gap:20px;flex-wrap:wrap;animation:fu .8s ease 1.1s both}
+.btn-g{display:inline-flex;align-items:center;gap:8px;padding:16px 40px;background:var(--gold);color:var(--black);font-family:var(--font-body);font-size:.78rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:all .3s;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))}
+.btn-g:hover{background:var(--gold2);transform:translateY(-3px)}
+.btn-o{display:inline-flex;align-items:center;gap:8px;padding:16px 40px;background:transparent;color:var(--gold);font-family:var(--font-body);font-size:.78rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border:1px solid rgba(201,168,76,.4);transition:all .3s;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))}
+.btn-o:hover{border-color:var(--gold);background:rgba(201,168,76,.07);transform:translateY(-3px)}
+.hero-stats{position:absolute;right:64px;bottom:80px;z-index:2;display:flex;flex-direction:column;gap:28px;animation:fu 1s ease 1.4s both}
+.hstat{text-align:right;padding-right:20px;border-right:1px solid rgba(201,168,76,.3);position:relative}
+.hstat::after{content:'';position:absolute;right:-3px;top:50%;transform:translateY(-50%);width:5px;height:5px;background:var(--gold);border-radius:50%}
+.hstat-n{font-family:var(--font-hero);font-size:2.8rem;line-height:1;color:var(--gold)}
+.hstat-l{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);margin-top:4px}
+.scroll-hint{position:absolute;bottom:40px;left:64px;display:flex;align-items:center;gap:12px;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:var(--grey);animation:fu 1s ease 1.6s both;z-index:2}
+.scroll-hint::after{content:'';width:60px;height:1px;background:linear-gradient(to right,var(--gold),transparent);animation:sp 2s ease infinite}
+@keyframes sp{0%,100%{transform:scaleX(1);opacity:.5}50%{transform:scaleX(1.3);opacity:1}}
 
-    /* ===== HERO ===== */
-    #hero {
-      min-height: 100vh; display: flex; flex-direction: column;
-      justify-content: flex-end; padding: 0 64px 80px;
-      position: relative; overflow: hidden;
-    }
-    .hero-bg {
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse 70% 60% at 70% 40%, rgba(201,168,76,0.07) 0%, transparent 70%),
-                  radial-gradient(ellipse 50% 80% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 60%),
-                  var(--black);
-    }
-    .hero-line {
-      position: absolute; top: 0; right: 160px;
-      width: 1px; height: 45vh;
-      background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent);
-      opacity: 0.4;
-    }
-    .hero-content { position: relative; z-index: 2; max-width: 900px; }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      border: 1px solid rgba(201,168,76,0.3);
-      padding: 6px 16px; border-radius: 2px;
-      font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 32px;
-      animation: fadeUp 0.8s ease 0.2s both;
-    }
-    .hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; }
-    .hero-name {
-      font-family: var(--font-display);
-      font-size: clamp(3.5rem, 9vw, 8rem);
-      font-weight: 700; line-height: 0.92;
-      letter-spacing: -0.02em;
-      margin-bottom: 8px;
-      animation: fadeUp 0.8s ease 0.4s both;
-    }
-    .hero-name .line1 { display: block; color: var(--white); }
-    .hero-name .line2 { display: block; color: var(--gold); font-style: italic; font-weight: 300; }
-    .hero-title {
-      font-family: var(--font-body);
-      font-size: clamp(0.9rem, 2vw, 1.15rem);
-      font-weight: 300; letter-spacing: 0.15em;
-      color: var(--grey-light); text-transform: uppercase;
-      margin-top: 24px; margin-bottom: 48px;
-      animation: fadeUp 0.8s ease 0.6s both;
-    }
-    .hero-cta {
-      display: flex; gap: 20px; flex-wrap: wrap;
-      animation: fadeUp 0.8s ease 0.8s both;
-    }
-    .btn-primary {
-      display: inline-block; padding: 14px 40px;
-      background: var(--gold); color: var(--black);
-      text-decoration: none; font-size: 0.78rem;
-      font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
-      transition: background 0.2s ease, transform 0.2s ease;
-      border: none; cursor: pointer;
-    }
-    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
-    .btn-outline {
-      display: inline-block; padding: 14px 40px;
-      background: transparent; color: var(--gold);
-      text-decoration: none; font-size: 0.78rem;
-      font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
-      border: 1px solid rgba(201,168,76,0.5);
-      transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
-    }
-    .btn-outline:hover { border-color: var(--gold); color: var(--gold-light); transform: translateY(-2px); }
-    .hero-scroll {
-      position: absolute; bottom: 40px; right: 64px;
-      display: flex; flex-direction: column; align-items: center; gap: 10px;
-      animation: fadeUp 1s ease 1.2s both; color: var(--grey);
-      font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
-    }
-    .hero-scroll::after {
-      content: '';
-      width: 1px; height: 60px;
-      background: linear-gradient(to bottom, var(--gold-dim), transparent);
-      animation: scrollLine 2s ease-in-out infinite;
-    }
-    @keyframes scrollLine { 0%,100% { opacity: 0.4; transform: scaleY(1); } 50% { opacity: 1; transform: scaleY(1.2); } }
-    .hero-numbers {
-      position: absolute; right: 64px; top: 50%;
-      transform: translateY(-50%);
-      display: flex; flex-direction: column; gap: 32px; z-index: 2;
-      animation: fadeIn 1s ease 1.4s both;
-    }
-    .hero-stat { text-align: right; }
-    .hero-stat-num {
-      font-family: var(--font-display);
-      font-size: 2.4rem; font-weight: 700;
-      color: var(--gold); line-height: 1;
-    }
-    .hero-stat-label {
-      font-size: 0.65rem; letter-spacing: 0.15em;
-      text-transform: uppercase; color: var(--grey);
-    }
+/* MARQUEE */
+.mq-wrap{background:var(--gold);padding:12px 0;overflow:hidden;position:relative;z-index:1}
+.mq-track{display:inline-flex;animation:mq 28s linear infinite;white-space:nowrap}
+.mq-track span{font-family:var(--font-hero);font-size:1.1rem;letter-spacing:.15em;color:var(--black);padding:0 28px}
+.mq-track .dot{color:rgba(0,0,0,.35);padding:0 4px}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-    /* ===== SECTION BASE ===== */
-    section { padding: 120px 64px; position: relative; }
-    .section-label {
-      font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 16px;
-    }
-    .section-label::before { content: ''; flex: 0 0 40px; height: 1px; background: var(--gold); }
-    .section-title {
-      font-family: var(--font-display);
-      font-size: clamp(2.2rem, 5vw, 4rem);
-      font-weight: 700; line-height: 1.1;
-      margin-bottom: 20px;
-    }
-    .section-title em { font-style: italic; color: var(--gold); font-weight: 300; }
-    .section-divider {
-      width: 60px; height: 2px;
-      background: linear-gradient(to right, var(--gold), transparent);
-      margin-bottom: 64px;
-    }
+/* SECTION */
+section{padding:120px 64px;position:relative;z-index:1}
+.sl{font-size:.65rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:16px;margin-bottom:12px}
+.sl::before{content:'';width:40px;height:1px;background:var(--gold)}
+.st{font-family:var(--font-hero);font-size:clamp(3rem,7vw,7rem);line-height:.9;letter-spacing:.02em;margin-bottom:16px}
+.st em{font-family:var(--font-display);font-style:italic;font-weight:300;color:var(--gold);font-size:.7em}
+.sb{width:80px;height:3px;background:linear-gradient(to right,var(--gold),transparent);margin-bottom:64px}
+.gold-div{width:100%;height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,.3),transparent);position:relative;z-index:1}
 
-    /* ===== ABOUT ===== */
-    #about { background: var(--dark); }
-    .about-grid {
-      display: grid; grid-template-columns: 1fr 1.4fr;
-      gap: 80px; align-items: start; max-width: 1200px;
-    }
-    .about-portrait {
-      position: relative;
-    }
-    .portrait-frame {
-      position: relative; padding: 16px 0 0 16px;
-    }
-    .portrait-frame::before {
-      content: '';
-      position: absolute; top: 0; left: 0;
-      width: 70%; height: 70%;
-      border-top: 1px solid var(--gold-dim);
-      border-left: 1px solid var(--gold-dim);
-    }
-    .portrait-frame::after {
-      content: '';
-      position: absolute; bottom: -16px; right: -16px;
-      width: 70%; height: 70%;
-      border-bottom: 1px solid var(--gold-dim);
-      border-right: 1px solid var(--gold-dim);
-    }
-    .portrait-img {
-      width: 100%; aspect-ratio: 3/4;
-      background: var(--dark3);
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden; position: relative;
-    }
-    .portrait-img img { width: 100%; height: 100%; object-fit: cover; }
-    .portrait-placeholder {
-      text-align: center; color: var(--grey);
-      font-size: 0.8rem; letter-spacing: 0.1em;
-      padding: 20px;
-    }
-    .portrait-placeholder .icon { font-size: 3rem; margin-bottom: 12px; display: block; }
-    .about-tag {
-      position: absolute; bottom: -24px; left: 16px;
-      background: var(--gold); color: var(--black);
-      padding: 8px 20px; font-size: 0.72rem;
-      font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
-    }
-    .about-text p {
-      font-size: 1.05rem; color: var(--grey-light);
-      margin-bottom: 20px; font-weight: 300;
-    }
-    .about-text p strong { color: var(--white); font-weight: 500; }
-    .about-details {
-      margin-top: 48px;
-      display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-    }
-    .detail-item { border-left: 2px solid var(--gold-dim); padding-left: 16px; }
-    .detail-label { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); }
-    .detail-value { font-size: 0.95rem; color: var(--white); margin-top: 4px; }
+/* ABOUT */
+#about{background:var(--dark)}
+.about-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:100px;align-items:start;max-width:1300px}
+.aif{position:relative;padding:20px 0 0 20px}
+.aif::before{content:'';position:absolute;top:0;left:0;width:60%;height:60%;border-top:1px solid var(--gold);border-left:1px solid var(--gold)}
+.aif::after{content:'';position:absolute;bottom:-20px;right:-20px;width:60%;height:60%;border-bottom:1px solid rgba(201,168,76,.35);border-right:1px solid rgba(201,168,76,.35)}
+.aimg{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;filter:grayscale(15%);transition:filter .6s}
+.aimg:hover{filter:grayscale(0%)}
+.aph{width:100%;aspect-ratio:3/4;background:var(--dark3);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--grey);font-size:.8rem;text-align:center;padding:20px}
+.abadge{position:absolute;bottom:-10px;left:0;background:var(--gold);color:var(--black);padding:10px 24px;font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%)}
+.atext p{font-size:1rem;color:var(--grey2);line-height:1.9;margin-bottom:18px}
+.atext p strong{color:var(--white);font-weight:500}
+.hl{color:var(--gold)}
+.adets{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:48px}
+.adet{border-left:2px solid rgba(201,168,76,.25);padding:8px 16px;transition:border-color .2s}
+.adet:hover{border-color:var(--gold)}
+.adet-l{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--grey)}
+.adet-v{font-size:.93rem;color:var(--white);margin-top:4px}
+.adet-v a{color:var(--white);text-decoration:none;transition:color .2s}
+.adet-v a:hover{color:var(--gold)}
 
-    /* ===== SKILLS ===== */
-    #skills { background: var(--black); }
-    .skills-layout {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 64px; max-width: 1200px;
-    }
-    .skill-category { margin-bottom: 40px; }
-    .skill-cat-title {
-      font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 24px; padding-bottom: 12px;
-      border-bottom: 1px solid rgba(201,168,76,0.2);
-    }
-    .skill-list { display: flex; flex-wrap: wrap; gap: 10px; }
-    .skill-tag {
-      padding: 8px 18px; border: 1px solid rgba(201,168,76,0.2);
-      font-size: 0.8rem; color: var(--grey-light);
-      letter-spacing: 0.05em;
-      transition: all 0.25s ease; cursor: default;
-    }
-    .skill-tag:hover {
-      border-color: var(--gold); color: var(--gold);
-      background: rgba(201,168,76,0.06);
-      transform: translateY(-2px);
-    }
-    .skill-tag.featured {
-      background: rgba(201,168,76,0.1);
-      border-color: rgba(201,168,76,0.4);
-      color: var(--gold-light);
-    }
+/* SKILLS */
+#skills{background:var(--black)}
+.sk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:48px;max-width:1300px}
+.sk-title{font-family:var(--font-hero);font-size:1.4rem;letter-spacing:.1em;color:var(--gold);margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid rgba(201,168,76,.2)}
+.sk-tags{display:flex;flex-wrap:wrap;gap:10px}
+.sk-tag{padding:8px 16px;border:1px solid rgba(201,168,76,.15);font-size:.75rem;letter-spacing:.05em;color:var(--grey2);transition:all .25s;cursor:default;clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%)}
+.sk-tag:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06);transform:translateY(-2px)}
+.sk-tag.star{background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.35);color:var(--gold)}
 
-    /* ===== PORTFOLIO ===== */
-    #portfolio { background: var(--dark); }
-    .portfolio-filters {
-      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 48px;
-    }
-    .filter-btn {
-      padding: 8px 20px; background: transparent;
-      border: 1px solid rgba(201,168,76,0.2);
-      color: var(--grey); font-family: var(--font-body);
-      font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
-      cursor: pointer; transition: all 0.2s ease;
-    }
-    .filter-btn:hover, .filter-btn.active {
-      background: var(--gold); color: var(--black); border-color: var(--gold);
-    }
-    .portfolio-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2px; max-width: 1400px;
-    }
-    .portfolio-item {
-      position: relative; overflow: hidden;
-      aspect-ratio: 4/3;
-      background: var(--dark3);
-      cursor: pointer;
-    }
-    .portfolio-item.large { grid-column: span 2; aspect-ratio: 16/9; }
-    .portfolio-item.tall { grid-row: span 2; aspect-ratio: auto; }
-    .portfolio-thumb {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s ease;
-    }
-    .portfolio-placeholder {
-      width: 100%; height: 100%; min-height: 240px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      background: var(--dark2);
-      color: var(--grey); font-size: 0.75rem; letter-spacing: 0.1em;
-      text-align: center; padding: 20px;
-      transition: background 0.3s ease;
-    }
-    .portfolio-placeholder .cat-icon { font-size: 2rem; margin-bottom: 8px; display: block; }
-    .portfolio-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
-      opacity: 0; transition: opacity 0.4s ease;
-      display: flex; flex-direction: column; justify-content: flex-end; padding: 24px;
-    }
-    .portfolio-item:hover .portfolio-overlay { opacity: 1; }
-    .portfolio-item:hover .portfolio-thumb { transform: scale(1.05); }
-    .portfolio-item:hover .portfolio-placeholder { background: var(--dark3); }
-    .portfolio-cat {
-      font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 6px;
-    }
-    .portfolio-ptitle {
-      font-family: var(--font-display); font-size: 1.4rem;
-      font-weight: 600; color: var(--white);
-    }
+/* PORTFOLIO */
+#portfolio{background:var(--dark);padding-bottom:80px}
+.pf-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:48px}
+.filt{padding:9px 22px;background:transparent;border:1px solid rgba(201,168,76,.18);color:var(--grey);font-family:var(--font-body);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .2s;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%)}
+.filt:hover,.filt.active{background:var(--gold);color:var(--black);border-color:var(--gold);font-weight:600}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;max-width:1600px}
+.pi{position:relative;overflow:hidden;aspect-ratio:4/3;background:var(--dark3);cursor:pointer}
+.pi.wide{grid-column:span 2;aspect-ratio:16/9}
+.pi.tall{grid-row:span 2;aspect-ratio:auto}
+.pi-img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.16,1,.3,1),filter .5s;filter:brightness(.85) saturate(.9)}
+.pi:hover .pi-img{transform:scale(1.08);filter:brightness(1) saturate(1.1)}
+.pi-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,8,8,.95) 0%,rgba(8,8,8,.35) 50%,transparent 100%);opacity:0;transition:opacity .4s;display:flex;flex-direction:column;justify-content:flex-end;padding:24px}
+.pi:hover .pi-ov{opacity:1}
+.pi-cat{font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;transform:translateY(10px);transition:transform .4s .05s}
+.pi-title{font-family:var(--font-display);font-size:1.3rem;font-weight:600;color:var(--white);transform:translateY(10px);transition:transform .4s .1s}
+.pi:hover .pi-cat,.pi:hover .pi-title{transform:translateY(0)}
+.pi-corner{position:absolute;top:0;left:0;width:0;height:0;border-style:solid;border-width:28px 28px 0 0;border-color:var(--gold) transparent transparent transparent;opacity:0;transition:opacity .3s}
+.pi:hover .pi-corner{opacity:1}
+/* web special */
+.pi.wc{background:linear-gradient(135deg,#0a0a0a,#161616);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;border:1px solid rgba(201,168,76,.12);transition:border-color .3s}
+.pi.wc:hover{border-color:rgba(201,168,76,.35)}
+.wc-icon{font-size:2.4rem}
+.wc-name{font-family:var(--font-hero);font-size:1.8rem;letter-spacing:.1em;color:var(--gold);text-align:center}
+.wc-sub{font-size:.78rem;color:var(--grey2);letter-spacing:.08em;text-align:center}
+.wc-btn{padding:8px 24px;border:1px solid rgba(201,168,76,.4);color:var(--gold);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:all .3s;clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%)}
+.wc-btn:hover{background:var(--gold);color:var(--black)}
 
-    /* ===== EXPERIENCE ===== */
-    #experience { background: var(--black); }
-    .exp-layout { max-width: 900px; }
-    .exp-item {
-      display: grid; grid-template-columns: 200px 1fr;
-      gap: 40px; padding: 48px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .exp-item:last-child { border-bottom: none; }
-    .exp-meta {}
-    .exp-period {
-      font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 8px;
-    }
-    .exp-company {
-      font-family: var(--font-display); font-size: 1.1rem;
-      color: var(--white); font-weight: 600; margin-bottom: 4px;
-    }
-    .exp-location { font-size: 0.78rem; color: var(--grey); }
-    .exp-content {}
-    .exp-role {
-      font-family: var(--font-display); font-size: 1.6rem;
-      font-weight: 700; margin-bottom: 16px; color: var(--white);
-    }
-    .exp-desc {
-      font-size: 0.9rem; color: var(--grey-light);
-      line-height: 1.8; margin-bottom: 20px;
-    }
-    .exp-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-    .exp-tag {
-      font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--gold-dim); padding: 4px 12px;
-      border: 1px solid rgba(201,168,76,0.15);
-    }
-    .exp-current {
-      display: inline-block; margin-left: 12px;
-      background: var(--gold); color: var(--black);
-      font-size: 0.6rem; font-weight: 700;
-      padding: 2px 8px; letter-spacing: 0.15em; text-transform: uppercase;
-      vertical-align: middle;
-    }
+/* LIGHTBOX */
+#lb{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+#lb.open{display:flex}
+#lb-img{max-width:90vw;max-height:85vh;object-fit:contain;animation:lbi .3s ease}
+#lb-x{position:absolute;top:20px;right:28px;font-size:2rem;color:var(--grey2);cursor:pointer;transition:color .2s;background:none;border:none;line-height:1}
+#lb-x:hover{color:var(--gold)}
+#lb-cap{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-family:var(--font-display);font-size:1.1rem;color:var(--white);text-align:center;font-style:italic;white-space:nowrap}
+#lb-p,#lb-n{position:absolute;top:50%;transform:translateY(-50%);background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);color:var(--gold);font-size:1.6rem;padding:16px 20px;cursor:pointer;transition:all .2s;line-height:1}
+#lb-p{left:16px}#lb-n{right:16px}
+#lb-p:hover,#lb-n:hover{background:var(--gold);color:var(--black)}
+@keyframes lbi{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
 
-    /* ===== CONTACT ===== */
-    #contact {
-      background: var(--dark);
-      min-height: 60vh; display: flex; flex-direction: column; justify-content: center;
-    }
-    .contact-layout {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 80px; max-width: 1200px; align-items: start;
-    }
-    .contact-info p {
-      font-size: 1rem; color: var(--grey-light);
-      margin-bottom: 40px; max-width: 440px;
-    }
-    .contact-items { display: flex; flex-direction: column; gap: 24px; }
-    .contact-item {
-      display: flex; gap: 20px; align-items: flex-start;
-    }
-    .contact-icon {
-      width: 40px; height: 40px; flex-shrink: 0;
-      border: 1px solid rgba(201,168,76,0.3);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--gold); font-size: 1rem;
-    }
-    .contact-text .label {
-      font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey);
-    }
-    .contact-text .value {
-      font-size: 0.95rem; color: var(--white); margin-top: 4px;
-    }
-    .contact-text a { color: var(--white); text-decoration: none; transition: color 0.2s ease; }
-    .contact-text a:hover { color: var(--gold); }
-    .contact-form { display: flex; flex-direction: column; gap: 20px; }
-    .form-group { position: relative; }
-    .form-group label {
-      display: block; font-size: 0.65rem; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--grey); margin-bottom: 10px;
-    }
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      width: 100%; background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: var(--white); font-family: var(--font-body); font-size: 0.9rem;
-      padding: 14px 16px; outline: none;
-      transition: border-color 0.2s ease;
-    }
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus { border-color: var(--gold); }
-    .form-group textarea { height: 120px; resize: vertical; }
-    .form-group select { cursor: pointer; appearance: none; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .form-submit {
-      padding: 16px 40px; background: var(--gold); color: var(--black);
-      border: none; font-family: var(--font-body); font-size: 0.78rem;
-      font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
-      cursor: pointer; transition: background 0.2s ease, transform 0.2s ease;
-      align-self: flex-start;
-    }
-    .form-submit:hover { background: var(--gold-light); transform: translateY(-2px); }
-    .form-success {
-      display: none; padding: 16px; background: rgba(201,168,76,0.1);
-      border: 1px solid rgba(201,168,76,0.3);
-      color: var(--gold); font-size: 0.85rem; letter-spacing: 0.05em;
-    }
+/* EXPERIENCE */
+#experience{background:var(--black)}
+.exp-wrap{max-width:1000px}
+.ei{display:grid;grid-template-columns:220px 1fr;gap:48px;padding:48px 0;border-bottom:1px solid rgba(255,255,255,.05);position:relative}
+.ei::before{content:'';position:absolute;left:0;top:0;width:0;height:1px;background:var(--gold);transition:width .6s}
+.ei:hover::before{width:100%}
+.ei-period{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.ei-co{font-family:var(--font-display);font-size:1.05rem;font-weight:600;color:var(--white);margin-bottom:4px}
+.ei-loc{font-size:.72rem;color:var(--grey)}
+.ei-role{font-family:var(--font-hero);font-size:2rem;letter-spacing:.05em;margin-bottom:16px;line-height:1}
+.ei-now{display:inline-block;background:var(--gold);color:var(--black);font-size:.58rem;font-weight:700;padding:3px 10px;letter-spacing:.15em;text-transform:uppercase;vertical-align:middle;margin-left:10px}
+.ei-desc{font-size:.88rem;color:var(--grey2);line-height:1.8;margin-bottom:18px}
+.ei-tags{display:flex;flex-wrap:wrap;gap:8px}
+.ei-tag{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(201,168,76,.65);padding:4px 12px;border:1px solid rgba(201,168,76,.15)}
 
-    /* ===== FOOTER ===== */
-    footer {
-      background: var(--black);
-      border-top: 1px solid rgba(201,168,76,0.1);
-      padding: 40px 64px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .footer-logo {
-      font-family: var(--font-display); font-size: 1.2rem;
-      font-weight: 600; color: var(--gold); letter-spacing: 0.08em;
-    }
-    .footer-logo span { color: var(--grey); font-weight: 300; font-style: italic; font-size: 0.9rem; }
-    .footer-copy { font-size: 0.75rem; color: var(--grey); letter-spacing: 0.05em; }
-    .footer-links { display: flex; gap: 24px; }
-    .footer-links a {
-      font-size: 0.75rem; color: var(--grey);
-      text-decoration: none; letter-spacing: 0.1em;
-      transition: color 0.2s ease;
-    }
-    .footer-links a:hover { color: var(--gold); }
+/* CONTACT */
+#contact{background:var(--dark)}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:100px;max-width:1300px;align-items:start}
+.cbig{font-family:var(--font-hero);font-size:clamp(3rem,8vw,8rem);line-height:.88;color:transparent;-webkit-text-stroke:1px rgba(201,168,76,.2);margin-bottom:40px}
+.cdesc{font-size:1rem;color:var(--grey2);line-height:1.8;max-width:380px;margin-bottom:48px}
+.cis{display:flex;flex-direction:column;gap:22px}
+.ci{display:flex;gap:20px;align-items:flex-start}
+.ci-icon{width:44px;height:44px;flex-shrink:0;border:1px solid rgba(201,168,76,.22);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1rem;transition:all .3s}
+.ci:hover .ci-icon{background:var(--gold);color:var(--black)}
+.ci-l{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--grey)}
+.ci-v{font-size:.93rem;color:var(--white);margin-top:4px}
+.ci-v a{color:var(--white);text-decoration:none;transition:color .2s}
+.ci-v a:hover{color:var(--gold)}
+.cf{display:flex;flex-direction:column;gap:20px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fg label{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);display:block;margin-bottom:10px}
+.fg input,.fg textarea,.fg select{width:100%;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-body);font-size:.9rem;padding:14px 16px;outline:none;transition:border-color .2s;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%)}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:rgba(201,168,76,.6)}
+.fg textarea{height:120px;resize:vertical}
+.csend{padding:16px 44px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-body);font-size:.78rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;transition:all .3s;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));align-self:flex-start}
+.csend:hover{background:var(--gold2);transform:translateY(-2px)}
+.cok{display:none;padding:14px 20px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);font-size:.85rem}
 
-    /* ===== ANIMATIONS ===== */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    .reveal {
-      opacity: 0; transform: translateY(32px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-    .reveal-delay-4 { transition-delay: 0.4s; }
+/* FOOTER */
+footer{background:var(--black);border-top:1px solid rgba(201,168,76,.1);padding:40px 64px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
+.fl{font-family:var(--font-hero);font-size:1.4rem;letter-spacing:.1em;color:var(--gold)}
+.fl span{font-family:var(--font-display);font-style:italic;font-weight:300;font-size:.9rem;color:var(--grey);display:block;margin-top:-4px}
+.fc{font-size:.72rem;color:var(--grey)}
+.fls{display:flex;gap:24px}
+.fls a{font-size:.72rem;color:var(--grey);text-decoration:none;letter-spacing:.1em;transition:color .2s}
+.fls a:hover{color:var(--gold)}
 
-    /* ===== GOLD LINE DIVIDER ===== */
-    .gold-line {
-      width: 100%; height: 1px;
-      background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
-      margin: 0;
-    }
+/* REVEAL */
+.rv{opacity:0;transform:translateY(36px);transition:opacity .8s ease,transform .8s ease}
+.rv.in{opacity:1;transform:translateY(0)}
+.rv.d1{transition-delay:.1s}.rv.d2{transition-delay:.2s}.rv.d3{transition-delay:.3s}.rv.d4{transition-delay:.4s}
 
-    /* ===== MARQUEE ===== */
-    .marquee-wrap {
-      overflow: hidden; background: var(--gold);
-      padding: 14px 0; white-space: nowrap;
-    }
-    .marquee-track {
-      display: inline-flex; gap: 0;
-      animation: marquee 20s linear infinite;
-    }
-    .marquee-track span {
-      color: var(--black); font-size: 0.72rem;
-      font-weight: 600; letter-spacing: 0.2em;
-      text-transform: uppercase; padding: 0 40px;
-    }
-    .marquee-track span.sep { color: rgba(0,0,0,0.3); padding: 0 4px; }
-    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 1024px) {
-      nav { padding: 20px 32px; }
-      nav.scrolled { padding: 14px 32px; }
-      section { padding: 80px 32px; }
-      #hero { padding: 0 32px 80px; }
-      .hero-numbers { display: none; }
-      .about-grid { grid-template-columns: 1fr; }
-      .skills-layout { grid-template-columns: 1fr; }
-      .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
-      .portfolio-item.large { grid-column: span 2; }
-      .exp-item { grid-template-columns: 1fr; gap: 16px; }
-      .contact-layout { grid-template-columns: 1fr; gap: 48px; }
-      footer { flex-direction: column; gap: 20px; text-align: center; }
-    }
-    @media (max-width: 768px) {
-      nav { padding: 18px 24px; }
-      nav.scrolled { padding: 14px 24px; }
-      .nav-links { display: none; }
-      .hamburger { display: flex; }
-      section { padding: 64px 24px; }
-      #hero { padding: 0 24px 64px; }
-      .hero-scroll { right: 24px; }
-      .portfolio-grid { grid-template-columns: 1fr; }
-      .portfolio-item.large { grid-column: span 1; }
-      .portfolio-item.tall { grid-row: span 1; }
-      .form-row { grid-template-columns: 1fr; }
-      footer { padding: 32px 24px; }
-    }
-    @media (max-width: 480px) {
-      .hero-name { font-size: 3rem; }
-    }
-  </style>
+/* RESPONSIVE */
+@media(max-width:1100px){
+  nav,nav.scrolled{padding:20px 32px}
+  section{padding:80px 32px}
+  #hero{padding:0 32px 80px}
+  .hero-stats{display:none}
+  .about-grid,.cg{grid-template-columns:1fr;gap:60px}
+  .sk-grid{grid-template-columns:1fr 1fr}
+  .pgrid{grid-template-columns:repeat(2,1fr)}
+  .pi.wide{grid-column:span 2}
+  footer{flex-direction:column;gap:20px;text-align:center}
+}
+@media(max-width:768px){
+  nav,nav.scrolled{padding:18px 24px}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  section{padding:64px 24px}
+  #hero{padding:0 24px 60px}
+  .scroll-hint{display:none}
+  .pgrid{grid-template-columns:1fr}
+  .pi.wide,.pi.tall{grid-column:span 1;grid-row:span 1;aspect-ratio:4/3}
+  .ei{grid-template-columns:1fr;gap:12px}
+  .fr{grid-template-columns:1fr}
+  footer{padding:32px 24px}
+  .sk-grid{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
 
-<!-- Custom cursor -->
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+<!-- LOADER -->
+<div id="loader">
+  <div class="ld-logo">OMNI CREATOR</div>
+  <div class="ld-sub">Lambert Lopez — Portfolio</div>
+  <div class="ld-bar"><div class="ld-fill"></div></div>
+</div>
 
-<!-- ===== NAVIGATION ===== -->
-<nav id="navbar">
-  <a href="#hero" class="nav-logo">Lambert<span> Lopez</span></a>
+<!-- CURSOR -->
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- PARTICLES -->
+<canvas id="particles"></canvas>
+
+<!-- LIGHTBOX -->
+<div id="lb">
+  <button id="lb-x">✕</button>
+  <button id="lb-p">&#8249;</button>
+  <img id="lb-img" src="" alt=""/>
+  <button id="lb-n">&#8250;</button>
+  <div id="lb-cap"></div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">LAMBERT<span>Omni Creator</span></a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#skills">Skills</a></li>
@@ -617,934 +295,331 @@
     <li><a href="#experience">Experience</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <div class="hamburger" id="hamburger" onclick="toggleMobileNav()">
-    <span></span><span></span><span></span>
-  </div>
+  <div class="hamburger" id="ham" onclick="toggleMenu()"><span></span><span></span><span></span></div>
 </nav>
-
-<!-- Mobile Nav -->
-<div class="mobile-nav" id="mobileNav">
-  <a href="#about" onclick="toggleMobileNav()">About</a>
-  <a href="#skills" onclick="toggleMobileNav()">Skills</a>
-  <a href="#portfolio" onclick="toggleMobileNav()">Portfolio</a>
-  <a href="#experience" onclick="toggleMobileNav()">Experience</a>
-  <a href="#contact" onclick="toggleMobileNav()">Contact</a>
+<div class="mob-menu" id="mob">
+  <a href="#about" onclick="toggleMenu()">About</a>
+  <a href="#skills" onclick="toggleMenu()">Skills</a>
+  <a href="#portfolio" onclick="toggleMenu()">Portfolio</a>
+  <a href="#experience" onclick="toggleMenu()">Experience</a>
+  <a href="#contact" onclick="toggleMenu()">Contact</a>
 </div>
 
-<!-- ===== HERO ===== -->
+<!-- HERO -->
 <section id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-line"></div>
-
-  <div class="hero-numbers">
-    <div class="hero-stat">
-      <div class="hero-stat-num">8+</div>
-      <div class="hero-stat-label">Years Experience</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num">100+</div>
-      <div class="hero-stat-label">Projects Delivered</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num">4</div>
-      <div class="hero-stat-label">Countries Served</div>
-    </div>
-  </div>
-
-  <div class="hero-content">
-    <div class="hero-badge">Available for Freelance &amp; Full-time</div>
+  <div class="hero-bg-word">OMNI</div>
+  <div class="hero-diag"></div>
+  <div class="hero-grid-line"></div>
+  <div class="hero-c">
+    <div class="hero-eyebrow">Creative Director &amp; Visual Artist</div>
     <h1 class="hero-name">
-      <span class="line1">Lambert</span>
-      <span class="line2">Lopez</span>
+      <span class="n1">LAMBERT</span>
+      <span class="n2">LOPEZ</span>
     </h1>
-    <p class="hero-title">Creative Director &nbsp;/&nbsp; Graphic Designer &nbsp;/&nbsp; Web &amp; Mobile Developer</p>
+    <p class="hero-tag">Founder of <strong>Omni Creator</strong> &amp; Tracework Studio — <em>turning bold ideas into unforgettable visuals</em></p>
+    <div class="hero-tw">I create <span id="tw">Graphic Design</span><span class="blink"></span></div>
     <div class="hero-cta">
-      <a href="#portfolio" class="btn-primary">View My Work</a>
-      <a href="#contact" class="btn-outline">Get In Touch</a>
+      <a href="#portfolio" class="btn-g">View My Work ›</a>
+      <a href="#contact" class="btn-o">Hire Me ›</a>
     </div>
   </div>
-
-  <div class="hero-scroll">Scroll</div>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-n">8+</div><div class="hstat-l">Years Experience</div></div>
+    <div class="hstat"><div class="hstat-n">100+</div><div class="hstat-l">Projects Done</div></div>
+    <div class="hstat"><div class="hstat-n">4</div><div class="hstat-l">Countries Served</div></div>
+  </div>
+  <div class="scroll-hint">Scroll to Explore</div>
 </section>
 
-<!-- Marquee -->
-<div class="marquee-wrap">
-  <div class="marquee-track">
-    <span>Graphic Design</span><span class="sep">âœ¦</span>
-    <span>Creative Direction</span><span class="sep">âœ¦</span>
-    <span>Web Development</span><span class="sep">âœ¦</span>
-    <span>Mobile Apps</span><span class="sep">âœ¦</span>
-    <span>UI/UX Design</span><span class="sep">âœ¦</span>
-    <span>Brand Strategy</span><span class="sep">âœ¦</span>
-    <span>Digital Art</span><span class="sep">âœ¦</span>
-    <span>Motion Graphics</span><span class="sep">âœ¦</span>
-    <!-- duplicate for seamless loop -->
-    <span>Graphic Design</span><span class="sep">âœ¦</span>
-    <span>Creative Direction</span><span class="sep">âœ¦</span>
-    <span>Web Development</span><span class="sep">âœ¦</span>
-    <span>Mobile Apps</span><span class="sep">âœ¦</span>
-    <span>UI/UX Design</span><span class="sep">âœ¦</span>
-    <span>Brand Strategy</span><span class="sep">âœ¦</span>
-    <span>Digital Art</span><span class="sep">âœ¦</span>
-    <span>Motion Graphics</span><span class="sep">âœ¦</span>
+<!-- MARQUEE -->
+<div class="mq-wrap">
+  <div class="mq-track">
+    <span>Graphic Design</span><span class="dot">✦</span><span>Omni Creator</span><span class="dot">✦</span><span>Creative Direction</span><span class="dot">✦</span><span>Web Development</span><span class="dot">✦</span><span>Mobile Apps</span><span class="dot">✦</span><span>Digital Art</span><span class="dot">✦</span><span>Brand Strategy</span><span class="dot">✦</span><span>Photo Manipulation</span><span class="dot">✦</span><span>Motion Graphics</span><span class="dot">✦</span>
+    <span>Graphic Design</span><span class="dot">✦</span><span>Omni Creator</span><span class="dot">✦</span><span>Creative Direction</span><span class="dot">✦</span><span>Web Development</span><span class="dot">✦</span><span>Mobile Apps</span><span class="dot">✦</span><span>Digital Art</span><span class="dot">✦</span><span>Brand Strategy</span><span class="dot">✦</span><span>Photo Manipulation</span><span class="dot">✦</span><span>Motion Graphics</span><span class="dot">✦</span>
   </div>
 </div>
 
-<!-- ===== ABOUT ===== -->
+<!-- ABOUT -->
 <section id="about">
-  <div class="section-label reveal">About Me</div>
-  <h2 class="section-title reveal reveal-delay-1">The Creative <em>Behind</em><br>the Vision</h2>
-  <div class="section-divider reveal reveal-delay-2"></div>
-
+  <div class="sl rv">About Me</div>
+  <h2 class="st rv d1">The Creative<br><em>Behind the Vision</em></h2>
+  <div class="sb rv d2"></div>
   <div class="about-grid">
-    <div class="about-portrait reveal reveal-delay-2">
-      <div class="portrait-frame">
-        <div class="portrait-img">
-          <!-- TO CUSTOMIZE: Replace the src below with your actual photo path -->
-          <!-- Example: <img src="assets/lambert.jpg" alt="Lambert Lopez" /> -->
-          <!-- Or use an online photo URL -->
-          <img src="assets/lambert.jpg" alt="Lambert Lopez" style="width:100%;height:100%;object-fit:cover;" />
-        </div>
-        <div class="about-tag">Founder â€” Tracework Studio</div>
+    <div class="rv d2" style="position:relative">
+      <div class="aif">
+        <img src="assets/portfolio/omni-creator.jpg" alt="Lambert Lopez — Omni Creator" class="aimg" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="aph" style="display:none"><span style="font-size:3rem;margin-bottom:12px">👤</span>Place your photo at<br/>assets/lambert.jpg</div>
       </div>
+      <div class="abadge">Omni Creator — Tracework Studio</div>
     </div>
-    <div class="about-text reveal reveal-delay-3">
-      <p>I am <strong>Lambert Vine Gil Lopez</strong> â€” a creative director, graphic designer, and full-stack digital professional based in Sampaloc, Manila. I blend artistic vision with technical execution to deliver digital solutions that are both beautiful and functional.</p>
-      <p>With over <strong>8 years of hands-on experience</strong> across print, digital, web, and mobile platforms, I've worked with clients from Cambodia, Saudi Arabia, the Philippines, and beyond â€” producing campaigns, brand identities, and interactive platforms that drive real results.</p>
-      <p>Currently, I run <strong>Tracework Creative Printing & Designing Studio</strong> in Manila â€” a full-service creative studio specializing in design, printing, web development, and mobile app solutions.</p>
-      <p>I am fluent in the full <strong>Adobe Creative Suite</strong>, proficient in React Native, Next.js, and modern web frameworks, and deeply passionate about the intersection of storytelling, design, and technology.</p>
-
-      <div class="about-details">
-        <div class="detail-item">
-          <div class="detail-label">Location</div>
-          <div class="detail-value">Sampaloc, Manila, PH</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-label">Email</div>
-          <div class="detail-value"><a href="/cdn-cgi/l/email-protection#442f253628202128217475042329252d286a272b29" style="color:var(--white);text-decoration:none"><span class="__cf_email__" data-cfemail="bdd6dccfd1d9d8d1d88d8cfddad0dcd4d193ded2d0">[email&#160;protected]</span></a></div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-label">Phone</div>
-          <div class="detail-value">+63 928 245 8718</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-label">Studio</div>
-          <div class="detail-value">Tracework Creative Studio</div>
-        </div>
+    <div class="atext rv d3">
+      <p>I am <strong>Lambert Vine Gil Lopez</strong> — a <span class="hl">Creative Director</span>, graphic designer, and full-stack digital professional operating under the brand <span class="hl">Omni Creator</span>, based in Sampaloc, Manila.</p>
+      <p>With over <strong>8 years of experience</strong> across print, digital, web, and mobile platforms, I have worked with clients from <strong>Cambodia, Saudi Arabia, the Philippines,</strong> and beyond — producing campaigns, brand identities, and interactive platforms that drive real results.</p>
+      <p>I founded <strong>Tracework Creative Printing &amp; Designing Studio</strong> — a multi-service studio specializing in design, printing, web development, and mobile app solutions. I blend artistic vision with technical execution to deliver digital solutions that are both beautiful and functional.</p>
+      <p>Fluent in the full <strong>Adobe Creative Suite</strong>, proficient in React Native and Next.js, and deeply passionate about the intersection of storytelling, design, and technology.</p>
+      <div class="adets">
+        <div class="adet"><div class="adet-l">Location</div><div class="adet-v">Sampaloc, Manila, PH</div></div>
+        <div class="adet"><div class="adet-l">Email</div><div class="adet-v"><a href="mailto:karldele01@gmail.com">karldele01@gmail.com</a></div></div>
+        <div class="adet"><div class="adet-l">Phone</div><div class="adet-v">+63 928 245 8718</div></div>
+        <div class="adet"><div class="adet-l">Brand</div><div class="adet-v">Omni Creator</div></div>
+        <div class="adet"><div class="adet-l">Studio</div><div class="adet-v">Tracework Creative Studio</div></div>
+        <div class="adet"><div class="adet-l">Live Project</div><div class="adet-v"><a href="https://lilot-creative-studio.vercel.app/" target="_blank">Lilot Creative Studio ↗</a></div></div>
       </div>
     </div>
   </div>
 </section>
 
-<div class="gold-line"></div>
+<div class="gold-div"></div>
 
-<!-- ===== SKILLS ===== -->
+<!-- SKILLS -->
 <section id="skills">
-  <div class="section-label reveal">What I Do</div>
-  <h2 class="section-title reveal reveal-delay-1">Skills &amp; <em>Expertise</em></h2>
-  <div class="section-divider reveal reveal-delay-2"></div>
-
-  <div class="skills-layout">
-    <div class="reveal reveal-delay-2">
-      <div class="skill-category">
-        <div class="skill-cat-title">Design & Creative</div>
-        <div class="skill-list">
-          <span class="skill-tag featured">Photoshop</span>
-          <span class="skill-tag featured">Illustrator</span>
-          <span class="skill-tag featured">InDesign</span>
-          <span class="skill-tag featured">After Effects</span>
-          <span class="skill-tag">Premiere Pro</span>
-          <span class="skill-tag">Visual Design</span>
-          <span class="skill-tag">Branding</span>
-          <span class="skill-tag">Motion Graphics</span>
-          <span class="skill-tag">Digital Illustration</span>
-          <span class="skill-tag">Typography</span>
-          <span class="skill-tag">Print Design</span>
-          <span class="skill-tag">3D Mockups</span>
-        </div>
-      </div>
-      <div class="skill-category">
-        <div class="skill-cat-title">Creative Strategy</div>
-        <div class="skill-list">
-          <span class="skill-tag">Creative Direction</span>
-          <span class="skill-tag">Concept Development</span>
-          <span class="skill-tag">Visual Storytelling</span>
-          <span class="skill-tag">Brand Strategy</span>
-          <span class="skill-tag">Digital Content Creation</span>
-          <span class="skill-tag">Campaign Management</span>
-        </div>
+  <div class="sl rv">What I Do</div>
+  <h2 class="st rv d1">Skills &amp; <em>Expertise</em></h2>
+  <div class="sb rv d2"></div>
+  <div class="sk-grid">
+    <div class="rv d1">
+      <div class="sk-title">Design &amp; Creative</div>
+      <div class="sk-tags">
+        <span class="sk-tag star">Photoshop</span><span class="sk-tag star">Illustrator</span><span class="sk-tag star">After Effects</span><span class="sk-tag">InDesign</span><span class="sk-tag">Premiere Pro</span><span class="sk-tag">Visual Design</span><span class="sk-tag">Branding</span><span class="sk-tag">Motion Graphics</span><span class="sk-tag">Digital Illustration</span><span class="sk-tag">Typography</span><span class="sk-tag">Print Design</span><span class="sk-tag">3D Mockups</span><span class="sk-tag">Photo Manipulation</span>
       </div>
     </div>
-    <div class="reveal reveal-delay-3">
-      <div class="skill-category">
-        <div class="skill-cat-title">Web & Mobile Development</div>
-        <div class="skill-list">
-          <span class="skill-tag featured">React Native</span>
-          <span class="skill-tag featured">Next.js</span>
-          <span class="skill-tag featured">Web Development</span>
-          <span class="skill-tag">Responsive Websites</span>
-          <span class="skill-tag">UI/UX Design</span>
-          <span class="skill-tag">Expo</span>
-          <span class="skill-tag">Mobile App Dev</span>
-          <span class="skill-tag">Cross-Platform Apps</span>
-          <span class="skill-tag">SEO Optimization</span>
-          <span class="skill-tag">Performance Optimization</span>
-        </div>
+    <div class="rv d2">
+      <div class="sk-title">Web &amp; Mobile Dev</div>
+      <div class="sk-tags">
+        <span class="sk-tag star">React Native</span><span class="sk-tag star">Next.js</span><span class="sk-tag star">Web Development</span><span class="sk-tag">Responsive Websites</span><span class="sk-tag">UI/UX Design</span><span class="sk-tag">Expo</span><span class="sk-tag">Mobile Apps</span><span class="sk-tag">Cross-Platform</span><span class="sk-tag">SEO</span><span class="sk-tag">Performance Optimization</span>
       </div>
-      <div class="skill-category">
-        <div class="skill-cat-title">Business & Operations</div>
-        <div class="skill-list">
-          <span class="skill-tag">Client Relations</span>
-          <span class="skill-tag">Project Management</span>
-          <span class="skill-tag">Agile / Scrum</span>
-          <span class="skill-tag">CRM Tools</span>
-          <span class="skill-tag">Business Development</span>
-          <span class="skill-tag">Team Leadership</span>
-        </div>
+    </div>
+    <div class="rv d3">
+      <div class="sk-title">Creative Strategy</div>
+      <div class="sk-tags">
+        <span class="sk-tag star">Creative Direction</span><span class="sk-tag">Concept Development</span><span class="sk-tag">Visual Storytelling</span><span class="sk-tag">Brand Strategy</span><span class="sk-tag">Digital Content</span><span class="sk-tag">Campaign Management</span><span class="sk-tag">Client Relations</span><span class="sk-tag">Project Management</span><span class="sk-tag">Team Leadership</span>
       </div>
     </div>
   </div>
 </section>
 
-<div class="gold-line"></div>
+<div class="gold-div"></div>
 
-<!-- ===== PORTFOLIO ===== -->
+<!-- PORTFOLIO -->
 <section id="portfolio">
-  <div class="section-label reveal">Selected Works</div>
-  <h2 class="section-title reveal reveal-delay-1">Portfolio &amp; <em>Projects</em></h2>
-  <div class="section-divider reveal reveal-delay-2"></div>
-
-  <div class="portfolio-filters reveal reveal-delay-2">
-    <button class="filter-btn active" onclick="filterPortfolio('all', this)">All Work</button>
-    <button class="filter-btn" onclick="filterPortfolio('branding', this)">Branding</button>
-    <button class="filter-btn" onclick="filterPortfolio('digital', this)">Digital Art</button>
-    <button class="filter-btn" onclick="filterPortfolio('print', this)">Print / Posters</button>
-    <button class="filter-btn" onclick="filterPortfolio('web', this)">Web & App</button>
-    <button class="filter-btn" onclick="filterPortfolio('merch', this)">Merchandise</button>
-    <button class="filter-btn" onclick="filterPortfolio('photo-manip', this)">Photo Manipulation</button>
-    <button class="filter-btn" onclick="filterPortfolio('stickers', this)">Sticker Art</button>
-    <button class="filter-btn" onclick="filterPortfolio('achievements', this)">Achievements</button>
+  <div class="sl rv">Selected Works</div>
+  <h2 class="st rv d1">Portfolio &amp; <em>Projects</em></h2>
+  <div class="sb rv d2"></div>
+  <div class="pf-filters rv d2">
+    <button class="filt active" onclick="fp('all',this)">All Work</button>
+    <button class="filt" onclick="fp('branding',this)">Branding</button>
+    <button class="filt" onclick="fp('digital',this)">Digital Art</button>
+    <button class="filt" onclick="fp('print',this)">Print / Posters</button>
+    <button class="filt" onclick="fp('web',this)">Web &amp; App</button>
+    <button class="filt" onclick="fp('merch',this)">Merchandise</button>
+    <button class="filt" onclick="fp('photo-manip',this)">Photo Manip</button>
+    <button class="filt" onclick="fp('stickers',this)">Sticker Art</button>
+    <button class="filt" onclick="fp('achievements',this)">Achievements</button>
   </div>
+  <div class="pgrid rv d3" id="pg">
 
-  <div class="portfolio-grid reveal reveal-delay-3" id="portfolioGrid">
+    <div class="pi wide" data-cat="digital" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/digital-portrait.jpg" alt="Hyper-Realistic Digital Portrait" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Digital Art</div><div class="pi-title">Hyper-Realistic Portrait Study</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="branding" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/casino-banners.jpg" alt="Casino Welcome Banners" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Brand Design</div><div class="pi-title">Casino Welcome Banners</div></div><div class="pi-corner"></div></div>
+    <div class="pi tall" data-cat="digital" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/digital-portrait.jpg" alt="Niqab Portrait Digital Study" loading="lazy" style="object-position:top"/><div class="pi-ov"><div class="pi-cat">Vector Art</div><div class="pi-title">Niqab Portrait — Digital Study</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="print" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/posters.jpg" alt="Holiday Campaign Posters" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Print Design</div><div class="pi-title">Holiday Campaign Posters</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="print" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/cover-fire.jpg" alt="Crypto iGaming Poster" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Brand / Print</div><div class="pi-title">First Cryptocurrency iGaming Poster</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="merch" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/tshirt-design.jpg" alt="T-Shirt Graphic Design" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Merchandise</div><div class="pi-title">T-Shirt Graphic Design</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="digital" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/family-portrait.jpg" alt="Family Portrait Vector" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Vector Art</div><div class="pi-title">Family Portrait — Vector Style</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="merch" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/embroidery.jpg" alt="3D Embroidery Mockup" loading="lazy"/><div class="pi-ov"><div class="pi-cat">3D / Merchandise</div><div class="pi-title">3D Embroidery AI Mockup</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="branding" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/ornament-creatives.jpg" alt="Holiday Ornament Design" loading="lazy"/><div class="pi-ov"><div class="pi-cat">3D Design</div><div class="pi-title">MTS Holiday Ornament Design</div></div><div class="pi-corner"></div></div>
 
-    <div class="portfolio-item large" data-cat="digital">
-      <img class="portfolio-thumb" src="assets/portfolio/digital-portrait.jpg" alt="Hyper-Realistic Digital Portrait" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Digital Art</div>
-        <div class="portfolio-ptitle">Hyper-Realistic Portrait Study</div>
-      </div>
+    <div class="pi wide wc" data-cat="web" onclick="window.open('https://lilot-creative-studio.vercel.app/','_blank')">
+      <div class="wc-icon">🌐</div>
+      <div class="wc-name">LILOT CREATIVE STUDIO</div>
+      <div class="wc-sub">React Native &nbsp;•&nbsp; Next.js &nbsp;•&nbsp; Responsive Web App</div>
+      <a class="wc-btn" href="https://lilot-creative-studio.vercel.app/" target="_blank" onclick="event.stopPropagation()">View Live Site ›</a>
     </div>
 
-    <div class="portfolio-item" data-cat="branding">
-      <img class="portfolio-thumb" src="assets/portfolio/casino-banners.jpg" alt="Casino Welcome Banners" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Brand Design</div>
-        <div class="portfolio-ptitle">Casino Welcome Banners</div>
-      </div>
-    </div>
+    <div class="pi" data-cat="merch" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/tshirt-designs/tshirt-1.jpg" alt="AI T-Shirt Design Vol.1" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Merchandise</div><div class="pi-title">AI T-Shirt Design Vol.1</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="merch" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/tshirt-designs/tshirt-2.jpg" alt="AI T-Shirt Design Vol.2" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Merchandise</div><div class="pi-title">AI T-Shirt Design Vol.2</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="merch" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/tshirt-designs/tshirt-3.jpg" alt="AI T-Shirt Design Vol.3" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Merchandise</div><div class="pi-title">AI T-Shirt Design Vol.3</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="merch" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/tshirt-designs/tshirt-4.jpg" alt="AI T-Shirt Design Vol.4" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Merchandise</div><div class="pi-title">AI T-Shirt Design Vol.4</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="merch" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/tshirt-designs/tshirt-5.jpg" alt="AI T-Shirt Design Vol.5" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Merchandise</div><div class="pi-title">AI T-Shirt Design Vol.5</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="merch" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/tshirt-designs/tshirt-6.jpeg" alt="AI T-Shirt Design Vol.6" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Merchandise</div><div class="pi-title">AI T-Shirt Design Vol.6</div></div><div class="pi-corner"></div></div>
 
-    <div class="portfolio-item tall" data-cat="digital">
-      <img class="portfolio-thumb" src="assets/portfolio/digital-portrait.jpg" alt="Niqab Portrait Digital Study" loading="lazy" style="object-position: top;" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Vector Art</div>
-        <div class="portfolio-ptitle">Niqab Portrait â€” Digital Study</div>
-      </div>
-    </div>
+    <div class="pi wide" data-cat="photo-manip" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/photo-manipulations/photo-manip-1.jpg" alt="Photo Composite Study 1" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Photo Manipulation</div><div class="pi-title">Photo Composite — Study 1</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="photo-manip" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/photo-manipulations/photo-manip-2.jpg" alt="Photo Composite Study 2" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Photo Manipulation</div><div class="pi-title">Photo Composite — Study 2</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="photo-manip" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/photo-manipulations/photo-manip-3.jpg" alt="Photo Composite Study 3" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Photo Manipulation</div><div class="pi-title">Photo Composite — Study 3</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="photo-manip" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/photo-manipulations/photo-manip-4.jpg" alt="Photo Composite Study 4" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Photo Manipulation</div><div class="pi-title">Photo Composite — Study 4</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="photo-manip" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/photo-manipulations/photo-manip-5.jpg" alt="Photo Composite Study 5" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Photo Manipulation</div><div class="pi-title">Photo Composite — Study 5</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="photo-manip" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/photo-manipulations/photo-manip-6.jpg" alt="Photo Composite Study 6" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Photo Manipulation</div><div class="pi-title">Photo Composite — Study 6</div></div><div class="pi-corner"></div></div>
 
-    <div class="portfolio-item" data-cat="print">
-      <img class="portfolio-thumb" src="assets/portfolio/posters.jpg" alt="Holiday Campaign Posters" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Print Design</div>
-        <div class="portfolio-ptitle">Holiday Campaign Posters</div>
-      </div>
-    </div>
+    <div class="pi wide" data-cat="stickers" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/sticker-characters/sticker-1.jpg" alt="Character Sticker Vol.1" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Sticker Art</div><div class="pi-title">Character Sticker Series — Vol.1</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="stickers" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/sticker-characters/sticker-2.jpg" alt="Character Sticker Vol.2" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Sticker Art</div><div class="pi-title">Character Sticker Series — Vol.2</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="stickers" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/sticker-characters/sticker-3.jpg" alt="Character Sticker Vol.3" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Sticker Art</div><div class="pi-title">Character Sticker Series — Vol.3</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="stickers" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/sticker-characters/sticker-4.jpg" alt="Character Sticker Vol.4" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Sticker Art</div><div class="pi-title">Character Sticker Series — Vol.4</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="stickers" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/sticker-characters/sticker-5.jpg" alt="Character Sticker Vol.5" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Sticker Art</div><div class="pi-title">Character Sticker Series — Vol.5</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="stickers" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/sticker-characters/sticker-6.jpg" alt="Character Sticker Vol.6" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Sticker Art</div><div class="pi-title">Character Sticker Series — Vol.6</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="stickers" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/sticker-characters/sticker-7.jpg" alt="Character Sticker Vol.7" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Sticker Art</div><div class="pi-title">Character Sticker Series — Vol.7</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="stickers" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/sticker-characters/sticker-8.jpg" alt="Character Sticker Vol.8" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Sticker Art</div><div class="pi-title">Character Sticker Series — Vol.8</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="stickers" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/sticker-characters/sticker-9.jpg" alt="Character Sticker Vol.9" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Sticker Art</div><div class="pi-title">Character Sticker Series — Vol.9</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="stickers" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/sticker-characters/sticker-10.jpg" alt="Character Sticker Vol.10" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Sticker Art</div><div class="pi-title">Character Sticker Series — Vol.10</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="stickers" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/sticker-characters/sticker-11.jpg" alt="Character Sticker Vol.11" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Sticker Art</div><div class="pi-title">Character Sticker Series — Vol.11</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="stickers" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/sticker-characters/sticker-12.jpg" alt="Character Sticker Vol.12" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Sticker Art</div><div class="pi-title">Character Sticker Series — Vol.12</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="stickers" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/sticker-characters/sticker-13.jpg" alt="Character Sticker Vol.13" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Sticker Art</div><div class="pi-title">Character Sticker Series — Vol.13</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="stickers" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/sticker-characters/sticker-14.jpg" alt="Character Sticker Vol.14" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Sticker Art</div><div class="pi-title">Character Sticker Series — Vol.14</div></div><div class="pi-corner"></div></div>
 
-    <div class="portfolio-item" data-cat="print">
-      <img class="portfolio-thumb" src="assets/portfolio/cover-fire.jpg" alt="First Cryptocurrency iGaming Poster" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Brand / Print</div>
-        <div class="portfolio-ptitle">First Cryptocurrency iGaming Poster</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="merch">
-      <img class="portfolio-thumb" src="assets/portfolio/tshirt-design.jpg" alt="T-Shirt Graphic Design" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Merchandise</div>
-        <div class="portfolio-ptitle">T-Shirt Graphic Design</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="digital">
-      <img class="portfolio-thumb" src="assets/portfolio/family-portrait.jpg" alt="Family Portrait Vector Style" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Vector Art</div>
-        <div class="portfolio-ptitle">Family Portrait â€” Vector Style</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="merch">
-      <img class="portfolio-thumb" src="assets/portfolio/embroidery.jpg" alt="3D Embroidery AI Mockup" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">3D / Merchandise</div>
-        <div class="portfolio-ptitle">3D Embroidery AI Mockup</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="branding">
-      <img class="portfolio-thumb" src="assets/portfolio/ornament-creatives.jpg" alt="MTS Holiday Ornament 3D Design" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">3D Design</div>
-        <div class="portfolio-ptitle">MTS Holiday Ornament Design</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item large" data-cat="web" style="cursor:pointer;" onclick="window.open('https://lilot-creative-studio.vercel.app/','_blank')">
-      <div class="portfolio-placeholder" style="background:linear-gradient(135deg,#0a0a0a 0%,#181818 40%,#111 100%);border:1px solid rgba(201,168,76,0.2);position:relative;overflow:hidden;">
-        <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(201,168,76,0.06) 0%,transparent 70%);"></div>
-        <span style="font-size:2.4rem;display:block;margin-bottom:14px;">ðŸŒ</span>
-        <strong style="color:var(--gold);font-size:1.15rem;display:block;margin-bottom:10px;letter-spacing:0.05em;">Lilot Creative Studio</strong>
-        <span style="color:var(--grey-light);font-size:0.85rem;display:block;margin-bottom:18px;">React Native &nbsp;â€¢&nbsp; Next.js &nbsp;â€¢&nbsp; Responsive Web App</span>
-        <a href="https://lilot-creative-studio.vercel.app/" target="_blank" style="display:inline-block;padding:8px 22px;border:1px solid rgba(201,168,76,0.5);color:var(--gold);font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;" onclick="event.stopPropagation()">View Live Site â€º</a>
-      </div>
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Web & App</div>
-        <div class="portfolio-ptitle">Full-Stack Web & Mobile Projects</div>
-      </div>
-    </div>
-
-
-    <!-- ===== TSHIRT DESIGNS ===== -->
-    <div class="portfolio-item" data-cat="merch">
-      <img class="portfolio-thumb" src="assets/portfolio/Tshirt Designs/Generated Image January 26, 2026 - 4_26PM.jpeg" alt="T-Shirt Design 1" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Merchandise</div>
-        <div class="portfolio-ptitle">AI T-Shirt Design Vol. 1</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="merch">
-      <img class="portfolio-thumb" src="assets/portfolio/Tshirt Designs/Generated Image January 26, 2026 - 4_28PM.jpeg" alt="T-Shirt Design 2" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Merchandise</div>
-        <div class="portfolio-ptitle">AI T-Shirt Design Vol. 2</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="merch">
-      <img class="portfolio-thumb" src="assets/portfolio/Tshirt Designs/Generated Image January 26, 2026 - 4_35PM.jpeg" alt="T-Shirt Design 3" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Merchandise</div>
-        <div class="portfolio-ptitle">AI T-Shirt Design Vol. 3</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="merch">
-      <img class="portfolio-thumb" src="assets/portfolio/Tshirt Designs/Generated Image January 26, 2026 - 4_35PM (1).jpeg" alt="T-Shirt Design 4" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Merchandise</div>
-        <div class="portfolio-ptitle">AI T-Shirt Design Vol. 4</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="merch">
-      <img class="portfolio-thumb" src="assets/portfolio/Tshirt Designs/Generated Image January 26, 2026 - 6_21PM.jpeg" alt="T-Shirt Design 5" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Merchandise</div>
-        <div class="portfolio-ptitle">AI T-Shirt Design Vol. 5</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="merch">
-      <img class="portfolio-thumb" src="assets/portfolio/Tshirt Designs/Generated Image January 26, 2026 - 7_36PM.jpeg" alt="T-Shirt Design 6" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Merchandise</div>
-        <div class="portfolio-ptitle">AI T-Shirt Design Vol. 6</div>
-      </div>
-    </div>
-
-    <!-- ===== PHOTO MANIPULATIONS ===== -->
-    <div class="portfolio-item large" data-cat="photo-manip">
-      <img class="portfolio-thumb" src="assets/portfolio/Photo Manipulations/photo_manipulation1.jpg" alt="Photo Manipulation 1" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Photo Manipulation</div>
-        <div class="portfolio-ptitle">Photo Composite â€” Study 1</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="photo-manip">
-      <img class="portfolio-thumb" src="assets/portfolio/Photo Manipulations/photo_manipulation2.jpeg" alt="Photo Manipulation 2" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Photo Manipulation</div>
-        <div class="portfolio-ptitle">Photo Composite â€” Study 2</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="photo-manip">
-      <img class="portfolio-thumb" src="assets/portfolio/Photo Manipulations/photo_manipulation3.jpeg" alt="Photo Manipulation 3" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Photo Manipulation</div>
-        <div class="portfolio-ptitle">Photo Composite â€” Study 3</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="photo-manip">
-      <img class="portfolio-thumb" src="assets/portfolio/Photo Manipulations/photo_manipulation4.png" alt="Photo Manipulation 4" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Photo Manipulation</div>
-        <div class="portfolio-ptitle">Photo Composite â€” Study 4</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="photo-manip">
-      <img class="portfolio-thumb" src="assets/portfolio/Photo Manipulations/photo_manipulation5.jpg" alt="Photo Manipulation 5" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Photo Manipulation</div>
-        <div class="portfolio-ptitle">Photo Composite â€” Study 5</div>
-      </div>
-    </div>
-
-    <!-- ===== STICKER CHARACTERS ===== -->
-    <div class="portfolio-item large" data-cat="stickers">
-      <img class="portfolio-thumb" src="assets/portfolio/Sticker Characters/20260102_185731-IMG_STYLE.jpg" alt="Sticker Character 1" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Sticker Art</div>
-        <div class="portfolio-ptitle">Character Sticker Series â€” Vol. 1</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="stickers">
-      <img class="portfolio-thumb" src="assets/portfolio/Sticker Characters/20260102_185836-IMG_STYLE.jpg" alt="Sticker Character 2" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Sticker Art</div>
-        <div class="portfolio-ptitle">Character Sticker Series â€” Vol. 2</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="stickers">
-      <img class="portfolio-thumb" src="assets/portfolio/Sticker Characters/20260102_185855-IMG_STYLE.jpg" alt="Sticker Character 3" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Sticker Art</div>
-        <div class="portfolio-ptitle">Character Sticker Series â€” Vol. 3</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="stickers">
-      <img class="portfolio-thumb" src="assets/portfolio/Sticker Characters/20260102_190142-IMG_STYLE.jpg" alt="Sticker Character 4" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Sticker Art</div>
-        <div class="portfolio-ptitle">Character Sticker Series â€” Vol. 4</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="stickers">
-      <img class="portfolio-thumb" src="assets/portfolio/Sticker Characters/20260102_190217-IMG_STYLE.jpg" alt="Sticker Character 5" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Sticker Art</div>
-        <div class="portfolio-ptitle">Character Sticker Series â€” Vol. 5</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="stickers">
-      <img class="portfolio-thumb" src="assets/portfolio/Sticker Characters/20260102_190242-IMG_STYLE.jpg" alt="Sticker Character 6" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Sticker Art</div>
-        <div class="portfolio-ptitle">Character Sticker Series â€” Vol. 6</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="stickers">
-      <img class="portfolio-thumb" src="assets/portfolio/Sticker Characters/20260102_190313-IMG_STYLE.jpg" alt="Sticker Character 7" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Sticker Art</div>
-        <div class="portfolio-ptitle">Character Sticker Series â€” Vol. 7</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="stickers">
-      <img class="portfolio-thumb" src="assets/portfolio/Sticker Characters/20260102_190348-IMG_STYLE.jpg" alt="Sticker Character 8" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Sticker Art</div>
-        <div class="portfolio-ptitle">Character Sticker Series â€” Vol. 8</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="stickers">
-      <img class="portfolio-thumb" src="assets/portfolio/Sticker Characters/20260102_190512-IMG_STYLE.jpg" alt="Sticker Character 9" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Sticker Art</div>
-        <div class="portfolio-ptitle">Character Sticker Series â€” Vol. 9</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="stickers">
-      <img class="portfolio-thumb" src="assets/portfolio/Sticker Characters/20260102_190551-IMG_STYLE.jpg" alt="Sticker Character 10" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Sticker Art</div>
-        <div class="portfolio-ptitle">Character Sticker Series â€” Vol. 10</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="stickers">
-      <img class="portfolio-thumb" src="assets/portfolio/Sticker Characters/20260102_190620-IMG_STYLE.jpg" alt="Sticker Character 11" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Sticker Art</div>
-        <div class="portfolio-ptitle">Character Sticker Series â€” Vol. 11</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="stickers">
-      <img class="portfolio-thumb" src="assets/portfolio/Sticker Characters/20260102_190822-IMG_STYLE.jpg" alt="Sticker Character 12" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Sticker Art</div>
-        <div class="portfolio-ptitle">Character Sticker Series â€” Vol. 12</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="stickers">
-      <img class="portfolio-thumb" src="assets/portfolio/Sticker Characters/20260102_190856-IMG_STYLE.jpg" alt="Sticker Character 13" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Sticker Art</div>
-        <div class="portfolio-ptitle">Character Sticker Series â€” Vol. 13</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="stickers">
-      <img class="portfolio-thumb" src="assets/portfolio/Sticker Characters/20260102_194733-IMG_STYLE.jpg" alt="Sticker Character 14" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Sticker Art</div>
-        <div class="portfolio-ptitle">Character Sticker Series â€” Vol. 14</div>
-      </div>
-    </div>
-
-    <!-- ===== ACHIEVEMENTS ===== -->
-    <div class="portfolio-item large" data-cat="achievements">
-      <img class="portfolio-thumb" src="assets/portfolio/Achievements/Notice from famous vloger rider in Sampaloc.jpg" alt="Featured by Famous Vlogger Rider" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Achievements</div>
-        <div class="portfolio-ptitle">Featured by Famous Vlogger Rider â€” Sampaloc</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="achievements">
-      <img class="portfolio-thumb" src="assets/portfolio/Achievements/DTI_Business_Registration.jpg" alt="DTI Business Registration" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Achievements</div>
-        <div class="portfolio-ptitle">DTI Business Registration â€” Tracework Studio</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="achievements">
-      <img class="portfolio-thumb" src="assets/portfolio/Achievements/COTND8952608-Lambert Vine Gil Dela Cruz.jpg" alt="Certificate" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Achievements</div>
-        <div class="portfolio-ptitle">Professional Certificate â€” Lambert Vine Gil</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="achievements">
-      <img class="portfolio-thumb" src="assets/portfolio/Achievements/certificate_of_recognition_AMA.jpg" alt="AMA Certificate of Recognition" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Achievements</div>
-        <div class="portfolio-ptitle">Certificate of Recognition â€” AMA Computer Learning Center</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="achievements">
-      <img class="portfolio-thumb" src="assets/portfolio/Achievements/Omni_Creator.webp" alt="Omni Creator" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Achievements</div>
-        <div class="portfolio-ptitle">Omni Creator â€” Brand Identity</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="achievements">
-      <img class="portfolio-thumb" src="assets/portfolio/Achievements/img3.jpg" alt="Achievement" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Achievements</div>
-        <div class="portfolio-ptitle">Recognition &amp; Awards</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="achievements">
-      <img class="portfolio-thumb" src="assets/portfolio/Achievements/img6.jpg" alt="Achievement" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Achievements</div>
-        <div class="portfolio-ptitle">Recognition &amp; Awards</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="achievements">
-      <img class="portfolio-thumb" src="assets/portfolio/Achievements/img9.jpg" alt="Achievement" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Achievements</div>
-        <div class="portfolio-ptitle">Recognition &amp; Awards</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="achievements">
-      <img class="portfolio-thumb" src="assets/portfolio/Achievements/img12.jpg" alt="Achievement" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Achievements</div>
-        <div class="portfolio-ptitle">Recognition &amp; Awards</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="achievements">
-      <img class="portfolio-thumb" src="assets/portfolio/Achievements/img15.jpg" alt="Achievement" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Achievements</div>
-        <div class="portfolio-ptitle">Recognition &amp; Awards</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="achievements">
-      <img class="portfolio-thumb" src="assets/portfolio/Achievements/img18.jpg" alt="Achievement" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Achievements</div>
-        <div class="portfolio-ptitle">Recognition &amp; Awards</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="achievements">
-      <img class="portfolio-thumb" src="assets/portfolio/Achievements/img22.jpg" alt="Achievement" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Achievements</div>
-        <div class="portfolio-ptitle">Recognition &amp; Awards</div>
-      </div>
-    </div>
-
-    <div class="portfolio-item" data-cat="achievements">
-      <img class="portfolio-thumb" src="assets/portfolio/Achievements/img25.jpg" alt="Achievement" loading="lazy" />
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Achievements</div>
-        <div class="portfolio-ptitle">Recognition &amp; Awards</div>
-      </div>
-    </div>
+    <div class="pi wide" data-cat="achievements" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/vlogger-notice.jpg" alt="Featured by Famous Vlogger Rider Sampaloc" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Achievements</div><div class="pi-title">Featured by Famous Vlogger Rider — Sampaloc</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="achievements" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/dti-registration.jpg" alt="DTI Business Registration Tracework Studio" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Achievements</div><div class="pi-title">DTI Business Registration — Tracework Studio</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="achievements" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/omni-creator.jpg" alt="Omni Creator Brand Identity" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Achievements</div><div class="pi-title">Omni Creator — Brand Identity</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="achievements" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/achievements/certificate-recognition-ama.jpg" alt="Certificate of Recognition AMA" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Achievements</div><div class="pi-title">Certificate of Recognition — AMA</div></div><div class="pi-corner"></div></div>
+    <div class="pi" data-cat="achievements" onclick="olb(this)"><img class="pi-img" src="assets/portfolio/achievements/cotnd-lambert-certificate.jpg" alt="Professional Certificate Lambert" loading="lazy"/><div class="pi-ov"><div class="pi-cat">Achievements</div><div class="pi-title">Professional Certificate — Lambert V.G.</div></div><div class="pi-corner"></div></div>
 
   </div>
-
-  <div style="text-align:center; margin-top:64px;" class="reveal">
-    <p style="color:var(--grey); font-size:0.85rem; letter-spacing:0.08em; margin-bottom:24px;">
-      âœ¦ &nbsp; More works available upon request &nbsp; âœ¦
-    </p>
-    <a href="/cdn-cgi/l/email-protection#8ee5effce2eaebe2ebbebfcee9e3efe7e2a0ede1e3" class="btn-outline">Request Full Portfolio</a>
+  <div style="text-align:center;margin-top:64px" class="rv">
+    <p style="color:var(--grey);font-size:.82rem;letter-spacing:.1em;margin-bottom:24px">✦ &nbsp; More works available upon request &nbsp; ✦</p>
+    <a href="mailto:karldele01@gmail.com" class="btn-o">Request Full Portfolio</a>
   </div>
 </section>
 
-<div class="gold-line"></div>
+<div class="gold-div"></div>
 
-<!-- ===== EXPERIENCE ===== -->
+<!-- EXPERIENCE -->
 <section id="experience">
-  <div class="section-label reveal">Career</div>
-  <h2 class="section-title reveal reveal-delay-1">Work <em>Experience</em></h2>
-  <div class="section-divider reveal reveal-delay-2"></div>
-
-  <div class="exp-layout">
-
-    <div class="exp-item reveal">
-      <div class="exp-meta">
-        <div class="exp-period">Jan 2025 â€” Present</div>
-        <div class="exp-company">Tracework Creative Studio</div>
-        <div class="exp-location">Sampaloc, Manila</div>
-      </div>
-      <div class="exp-content">
-        <div class="exp-role">Founder &amp; Creative Lead <span class="exp-current">Current</span></div>
-        <p class="exp-desc">Established and manage a multi-service creative studio specializing in graphic design, printing, web development, and mobile app solutions. Lead end-to-end client projects, directing creative strategy for both local and international clients, and drive innovation through AI-powered workflows.</p>
-        <div class="exp-tags">
-          <span class="exp-tag">Creative Direction</span>
-          <span class="exp-tag">Web Development</span>
-          <span class="exp-tag">Mobile Apps</span>
-          <span class="exp-tag">Brand Strategy</span>
-          <span class="exp-tag">Business Operations</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="exp-item reveal reveal-delay-1">
-      <div class="exp-meta">
-        <div class="exp-period">Oct â€” Dec 2025</div>
-        <div class="exp-company">Concentrix Philippines</div>
-        <div class="exp-location">Sta. Cruz, Manila</div>
-      </div>
-      <div class="exp-content">
-        <div class="exp-role">Advisor I (Macy's DCS â€” Seasonal)</div>
-        <p class="exp-desc">Provided high-quality customer support for Macy's DCS. Resolved technical and billing issues, consistently meeting KPIs (AHT, CSAT, FCR). Earned full Performance Bonus for the season and contributed to team development by mentoring new hires.</p>
-        <div class="exp-tags">
-          <span class="exp-tag">Salesforce</span>
-          <span class="exp-tag">Zendesk</span>
-          <span class="exp-tag">Customer Experience</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="exp-item reveal reveal-delay-1">
-      <div class="exp-meta">
-        <div class="exp-period">Mar 2024 â€” Dec 2024</div>
-        <div class="exp-company">Philexcel / Alorica</div>
-        <div class="exp-location">Clark, Angeles, Pampanga</div>
-      </div>
-      <div class="exp-content">
-        <div class="exp-role">Graphic Artist &amp; CX Agent</div>
-        <p class="exp-desc">Delivered creative design solutions for clients including Equitex.com and SeaBass Fishermans. Specialized in graphic arts, proofing, and recreating art files ensuring accuracy for client branding needs. Simultaneously supported T-Mobile customers through expert technical support.</p>
-        <div class="exp-tags">
-          <span class="exp-tag">Photoshop</span>
-          <span class="exp-tag">Illustrator</span>
-          <span class="exp-tag">Branding</span>
-          <span class="exp-tag">Print Production</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="exp-item reveal reveal-delay-1">
-      <div class="exp-meta">
-        <div class="exp-period">2022</div>
-        <div class="exp-company">Jalsat Al-Reef</div>
-        <div class="exp-location">Al Jubail, Saudi Arabia</div>
-      </div>
-      <div class="exp-content">
-        <div class="exp-role">Graphic Designer</div>
-        <p class="exp-desc">Designed dynamic banners, posters, social media posts, and animated QR code menus. Developed cohesive visual identities aligned with brand guidelines, producing high-impact seasonal marketing assets to amplify audience engagement across digital platforms.</p>
-        <div class="exp-tags">
-          <span class="exp-tag">Photoshop CC</span>
-          <span class="exp-tag">Illustrator CC</span>
-          <span class="exp-tag">Premiere CC</span>
-          <span class="exp-tag">After Effects</span>
-          <span class="exp-tag">Social Media</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="exp-item reveal reveal-delay-1">
-      <div class="exp-meta">
-        <div class="exp-period">Jan 2019 â€” 2022</div>
-        <div class="exp-company">Lucky Ruby Casino</div>
-        <div class="exp-location">Svay Rieng, Cambodia</div>
-      </div>
-      <div class="exp-content">
-        <div class="exp-role">Graphic Designer</div>
-        <p class="exp-desc">Designed web banners, posters, social media content, and promotional collateral across multiple casino brands. Developed animation to enhance visual storytelling and maintained a consistent, fresh online presence across all digital platforms.</p>
-        <div class="exp-tags">
-          <span class="exp-tag">Photoshop</span>
-          <span class="exp-tag">Illustrator</span>
-          <span class="exp-tag">Premiere Pro</span>
-          <span class="exp-tag">Animation</span>
-          <span class="exp-tag">Digital Marketing</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="exp-item reveal reveal-delay-1">
-      <div class="exp-meta">
-        <div class="exp-period">Sep 2018</div>
-        <div class="exp-company">King Graphics Design</div>
-        <div class="exp-location">Guagua, Pampanga</div>
-      </div>
-      <div class="exp-content">
-        <div class="exp-role">Graphic Artist / Graphic Applicator</div>
-        <p class="exp-desc">Delivered a wide range of graphic design and print application services for local clients. Handled design, production, and physical application of graphics across various media formats.</p>
-        <div class="exp-tags">
-          <span class="exp-tag">Print Design</span>
-          <span class="exp-tag">Photoshop</span>
-          <span class="exp-tag">Illustrator</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="exp-item reveal reveal-delay-1">
-      <div class="exp-meta">
-        <div class="exp-period">Dec 2017</div>
-        <div class="exp-company">Aira Printing Press</div>
-        <div class="exp-location">Guagua, Pampanga</div>
-      </div>
-      <div class="exp-content">
-        <div class="exp-role">Graphic Artist</div>
-        <p class="exp-desc">Expert in T-shirt printing, mug printing, bookbinding, tarpaulins, brochures, and acrylic bending. Produced custom print-ready graphics consistently adhering to client specifications and brand guidelines.</p>
-        <div class="exp-tags">
-          <span class="exp-tag">Photoshop</span>
-          <span class="exp-tag">Illustrator</span>
-          <span class="exp-tag">CorelDraw</span>
-          <span class="exp-tag">InDesign</span>
-          <span class="exp-tag">Print Production</span>
-        </div>
-      </div>
-    </div>
-
+  <div class="sl rv">Career</div>
+  <h2 class="st rv d1">Work <em>Experience</em></h2>
+  <div class="sb rv d2"></div>
+  <div class="exp-wrap">
+    <div class="ei rv"><div><div class="ei-period">Jan 2025 — Present</div><div class="ei-co">Tracework Creative Studio<br/><span style="color:var(--gold);font-size:.82rem;font-style:italic">Omni Creator</span></div><div class="ei-loc">Sampaloc, Manila</div></div><div><div class="ei-role">Founder &amp; Creative Lead<span class="ei-now">Now</span></div><p class="ei-desc">Operating under the creative brand <strong style="color:var(--gold)">Omni Creator</strong>, I established and manage Tracework Creative Studio — a multi-service studio specializing in graphic design, printing, web development, and mobile app solutions. I lead end-to-end client projects, direct creative strategy for both local and international clients, and drive innovation through AI-powered workflows.</p><div class="ei-tags"><span class="ei-tag">Creative Direction</span><span class="ei-tag">Web Development</span><span class="ei-tag">Mobile Apps</span><span class="ei-tag">Brand Strategy</span><span class="ei-tag">Business Operations</span></div></div></div>
+    <div class="ei rv d1"><div><div class="ei-period">Oct — Dec 2025</div><div class="ei-co">Concentrix Philippines</div><div class="ei-loc">Sta. Cruz, Manila</div></div><div><div class="ei-role">Advisor I — Macy's DCS</div><p class="ei-desc">Provided high-quality customer support for Macy's DCS. Resolved technical and billing issues consistently meeting KPIs (AHT, CSAT, FCR). Earned full Performance Bonus and mentored new hires.</p><div class="ei-tags"><span class="ei-tag">Salesforce</span><span class="ei-tag">Zendesk</span><span class="ei-tag">Customer Experience</span></div></div></div>
+    <div class="ei rv d1"><div><div class="ei-period">Mar — Dec 2024</div><div class="ei-co">Philexcel / Alorica</div><div class="ei-loc">Clark, Pampanga</div></div><div><div class="ei-role">Graphic Artist &amp; CX Agent</div><p class="ei-desc">Delivered creative design solutions for Equitex.com and SeaBass Fishermans. Specialized in graphic arts, proofing, and recreating art files ensuring accuracy for client branding needs.</p><div class="ei-tags"><span class="ei-tag">Photoshop</span><span class="ei-tag">Illustrator</span><span class="ei-tag">Branding</span><span class="ei-tag">Print Production</span></div></div></div>
+    <div class="ei rv d1"><div><div class="ei-period">2022</div><div class="ei-co">Jalsat Al-Reef</div><div class="ei-loc">Al Jubail, Saudi Arabia</div></div><div><div class="ei-role">Graphic Designer</div><p class="ei-desc">Designed dynamic banners, posters, social media content, and animated QR code menus. Developed cohesive visual identities for seasonal marketing campaigns.</p><div class="ei-tags"><span class="ei-tag">Photoshop CC</span><span class="ei-tag">After Effects</span><span class="ei-tag">Social Media</span></div></div></div>
+    <div class="ei rv d1"><div><div class="ei-period">Jan 2019 — 2022</div><div class="ei-co">Lucky Ruby Casino</div><div class="ei-loc">Svay Rieng, Cambodia</div></div><div><div class="ei-role">Graphic Designer</div><p class="ei-desc">Designed web banners, posters, social media content, and promotional collateral across multiple casino brands. Developed animations and maintained brand consistency across all digital platforms.</p><div class="ei-tags"><span class="ei-tag">Photoshop</span><span class="ei-tag">Premiere Pro</span><span class="ei-tag">Animation</span><span class="ei-tag">Digital Marketing</span></div></div></div>
+    <div class="ei rv d1"><div><div class="ei-period">Sep 2018</div><div class="ei-co">King Graphics Design</div><div class="ei-loc">Guagua, Pampanga</div></div><div><div class="ei-role">Graphic Artist / Applicator</div><p class="ei-desc">Delivered a full range of graphic design and print application services for local clients across various media formats.</p><div class="ei-tags"><span class="ei-tag">Print Design</span><span class="ei-tag">Photoshop</span><span class="ei-tag">Illustrator</span></div></div></div>
+    <div class="ei rv d1"><div><div class="ei-period">Dec 2017</div><div class="ei-co">Aira Printing Press</div><div class="ei-loc">Guagua, Pampanga</div></div><div><div class="ei-role">Graphic Artist</div><p class="ei-desc">Expert in T-shirt printing, mug printing, bookbinding, tarpaulins, brochures, and acrylic bending. Produced custom print-ready graphics adhering to client specifications.</p><div class="ei-tags"><span class="ei-tag">Photoshop</span><span class="ei-tag">CorelDraw</span><span class="ei-tag">InDesign</span><span class="ei-tag">Print Production</span></div></div></div>
   </div>
 </section>
 
-<div class="gold-line"></div>
+<div class="gold-div"></div>
 
-<!-- ===== CONTACT ===== -->
+<!-- CONTACT -->
 <section id="contact">
-  <div class="section-label reveal">Let's Work Together</div>
-  <h2 class="section-title reveal reveal-delay-1">Get In <em>Touch</em></h2>
-  <div class="section-divider reveal reveal-delay-2"></div>
-
-  <div class="contact-layout">
-    <div class="contact-info reveal reveal-delay-2">
-      <p>Whether you need a bold brand identity, a high-converting website, a polished mobile app, or a full creative campaign â€” I'm here to bring your vision to life. Let's build something remarkable together.</p>
-      <div class="contact-items">
-        <div class="contact-item">
-          <div class="contact-icon">âœ‰</div>
-          <div class="contact-text">
-            <div class="label">Email</div>
-            <div class="value"><a href="/cdn-cgi/l/email-protection#147f756678707178712425547379757d783a777b79"><span class="__cf_email__" data-cfemail="8ee5effce2eaebe2ebbebfcee9e3efe7e2a0ede1e3">[email&#160;protected]</span></a></div>
-          </div>
-        </div>
-        <div class="contact-item">
-          <div class="contact-icon">ðŸ“±</div>
-          <div class="contact-text">
-            <div class="label">Phone / WhatsApp</div>
-            <div class="value"><a href="tel:+639282458718">+63 928 245 8718</a></div>
-          </div>
-        </div>
-        <div class="contact-item">
-          <div class="contact-icon">ðŸ“</div>
-          <div class="contact-text">
-            <div class="label">Location</div>
-            <div class="value">Sampaloc, Manila, Metro Manila 1008, Philippines</div>
-          </div>
-        </div>
-        <div class="contact-item">
-          <div class="contact-icon">ðŸ¢</div>
-          <div class="contact-text">
-            <div class="label">Studio</div>
-            <div class="value">Tracework Creative Printing &amp; Designing Studio</div>
-          </div>
-        </div>
+  <div class="sl rv">Let's Create Together</div>
+  <h2 class="st rv d1">Get In <em>Touch</em></h2>
+  <div class="sb rv d2"></div>
+  <div class="cg">
+    <div class="rv d2">
+      <div class="cbig">LET'S<br/>BUILD<br/>SOMETHING<br/>GREAT</div>
+      <p class="cdesc">Whether you need a bold brand identity, a high-converting website, a polished mobile app, or a full creative campaign — I am here to bring your vision to life.</p>
+      <div class="cis">
+        <div class="ci"><div class="ci-icon">✉</div><div><div class="ci-l">Email</div><div class="ci-v"><a href="mailto:karldele01@gmail.com">karldele01@gmail.com</a></div></div></div>
+        <div class="ci"><div class="ci-icon">📱</div><div><div class="ci-l">Phone / WhatsApp</div><div class="ci-v"><a href="tel:+639282458718">+63 928 245 8718</a></div></div></div>
+        <div class="ci"><div class="ci-icon">📍</div><div><div class="ci-l">Location</div><div class="ci-v">Sampaloc, Manila 1008, Philippines</div></div></div>
+        <div class="ci"><div class="ci-icon">🌐</div><div><div class="ci-l">Live Project</div><div class="ci-v"><a href="https://lilot-creative-studio.vercel.app/" target="_blank">lilot-creative-studio.vercel.app ↗</a></div></div></div>
       </div>
     </div>
-
-    <div class="reveal reveal-delay-3">
-      <form class="contact-form" id="contactForm" onsubmit="handleSubmit(event)">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="fname">First Name</label>
-            <input type="text" id="fname" name="fname" placeholder="John" required />
-          </div>
-          <div class="form-group">
-            <label for="lname">Last Name</label>
-            <input type="text" id="lname" name="lname" placeholder="Doe" />
-          </div>
+    <div class="rv d3">
+      <form class="cf" id="cForm" onsubmit="sendForm(event)">
+        <div class="fr">
+          <div class="fg"><label>First Name</label><input type="text" name="fname" placeholder="John" required/></div>
+          <div class="fg"><label>Last Name</label><input type="text" name="lname" placeholder="Doe"/></div>
         </div>
-        <div class="form-group">
-          <label for="email">Email Address</label>
-          <input type="email" id="email" name="email" placeholder="you@company.com" required />
-        </div>
-        <div class="form-group">
-          <label for="project">Project Type</label>
-          <select id="project" name="project">
+        <div class="fg"><label>Email</label><input type="email" name="email" placeholder="you@company.com" required/></div>
+        <div class="fg"><label>Project Type</label>
+          <select name="project">
             <option value="" disabled selected>Select a service...</option>
-            <option value="branding">Branding & Identity</option>
-            <option value="web">Website Development</option>
-            <option value="mobile">Mobile App Development</option>
-            <option value="print">Print Design</option>
-            <option value="social">Social Media / Campaign</option>
-            <option value="other">Other / Multiple Services</option>
+            <option>Branding &amp; Identity</option>
+            <option>Website Development</option>
+            <option>Mobile App Development</option>
+            <option>Print Design</option>
+            <option>Social Media / Campaign</option>
+            <option>Other / Multiple Services</option>
           </select>
         </div>
-        <div class="form-group">
-          <label for="message">Message</label>
-          <textarea id="message" name="message" placeholder="Tell me about your project, timeline, and budget..." required></textarea>
-        </div>
-        <button type="submit" class="form-submit">Send Message â€º</button>
-        <div class="form-success" id="formSuccess">
-          âœ¦ &nbsp; Message sent! I'll get back to you within 24â€“48 hours.
-        </div>
+        <div class="fg"><label>Message</label><textarea name="message" placeholder="Tell me about your project, timeline, and budget..." required></textarea></div>
+        <button type="submit" class="csend">Send Message ›</button>
+        <div class="cok" id="cok">✦ &nbsp; Message sent! I will respond within 24–48 hours.</div>
       </form>
     </div>
   </div>
 </section>
 
-<!-- ===== FOOTER ===== -->
+<!-- FOOTER -->
 <footer>
-  <div class="footer-logo">Lambert Lopez <span>â€” Creative Director</span></div>
-  <div class="footer-copy">Â© 2026 Lambert Vine Gil Lopez. All rights reserved.</div>
-  <div class="footer-links">
-    <a href="/cdn-cgi/l/email-protection#5932382b353d3c353c6968193e34383035773a3634">Email</a>
-    <!-- TO CUSTOMIZE: Add your social links below -->
-    <!-- <a href="https://linkedin.com/in/yourprofile" target="_blank">LinkedIn</a> -->
-    <!-- <a href="https://github.com/yourusername" target="_blank">GitHub</a> -->
-    <!-- <a href="https://www.facebook.com/yourprofile" target="_blank">Facebook</a> -->
+  <div class="fl">OMNI CREATOR<span>Lambert Lopez — Creative Director</span></div>
+  <div class="fc">© 2026 Lambert Vine Gil Lopez. All rights reserved.</div>
+  <div class="fls">
+    <a href="mailto:karldele01@gmail.com">Email</a>
+    <a href="https://lilot-creative-studio.vercel.app/" target="_blank">Live Site</a>
     <a href="#portfolio">Portfolio</a>
     <a href="#contact">Hire Me</a>
   </div>
 </footer>
 
-<!-- ===== SCRIPTS ===== -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-  // â”€â”€ Custom cursor â”€â”€
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-  function animateCursor() {
-    cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
-    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
-    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-    requestAnimationFrame(animateCursor);
-  }
-  animateCursor();
-  document.querySelectorAll('a, button, .filter-btn, .portfolio-item').forEach(el => {
-    el.addEventListener('mouseenter', () => { cursor.style.width = '20px'; cursor.style.height = '20px'; ring.style.width = '60px'; ring.style.height = '60px'; });
-    el.addEventListener('mouseleave', () => { cursor.style.width = '10px'; cursor.style.height = '10px'; ring.style.width = '36px'; ring.style.height = '36px'; });
-  });
+<script>
+// LOADER
+window.addEventListener('load',()=>setTimeout(()=>document.getElementById('loader').classList.add('gone'),2000));
 
-  // â”€â”€ Navbar scroll â”€â”€
-  const navbar = document.getElementById('navbar');
-  window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 60);
-  });
+// CURSOR
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function ac(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(ac)})();
+document.querySelectorAll('a,button,.pi,.filt,.sk-tag').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('hov'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('hov'));
+});
 
-  // â”€â”€ Mobile nav â”€â”€
-  function toggleMobileNav() {
-    const nav = document.getElementById('mobileNav');
-    const ham = document.getElementById('hamburger');
-    nav.classList.toggle('open');
-    ham.classList.toggle('open');
-  }
+// PARTICLES
+const cv=document.getElementById('particles'),cx=cv.getContext('2d');
+let W,H,pts=[];
+function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight}
+resize();window.addEventListener('resize',resize);
+for(let i=0;i<70;i++)pts.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,s:Math.random()*2+.5,o:Math.random()*.35+.08});
+(function ap(){cx.clearRect(0,0,W,H);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;cx.beginPath();cx.arc(p.x,p.y,p.s,0,Math.PI*2);cx.fillStyle=`rgba(201,168,76,${p.o})`;cx.fill()});requestAnimationFrame(ap)})();
 
-  // â”€â”€ Scroll reveal â”€â”€
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+// NAV
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>60));
 
-  // â”€â”€ Portfolio filter â”€â”€
-  function filterPortfolio(cat, btn) {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.portfolio-item').forEach(item => {
-      const show = cat === 'all' || item.dataset.cat === cat;
-      item.style.display = show ? '' : 'none';
-    });
-  }
+// MOBILE MENU
+function toggleMenu(){document.getElementById('mob').classList.toggle('open');document.getElementById('ham').classList.toggle('open')}
 
-  // â”€â”€ Contact form (Formspree) â”€â”€
-  async function handleSubmit(e) {
-    e.preventDefault();
-    const btn = e.target.querySelector('.form-submit');
-    btn.textContent = 'Sending...';
-    btn.disabled = true;
+// TYPEWRITER
+const words=['Graphic Design','Brand Identity','Photo Manipulation','Digital Art','Web Development','Mobile Apps','Sticker Art','Motion Graphics','Creative Strategy'];
+let wi=0,ci=0,del=false,tw=document.getElementById('tw');
+function tl(){const w=words[wi];if(!del){tw.textContent=w.slice(0,++ci);if(ci===w.length){del=true;setTimeout(tl,1800);return}}else{tw.textContent=w.slice(0,--ci);if(ci===0){del=false;wi=(wi+1)%words.length}}setTimeout(tl,del?60:100)}
+tl();
 
-    const response = await fetch('https://formspree.io/f/mdalljle', {
-      method: 'POST',
-      body: new FormData(e.target),
-      headers: { 'Accept': 'application/json' }
-    });
+// REVEAL
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
 
-    if (response.ok) {
-      document.getElementById('formSuccess').style.display = 'block';
-      btn.textContent = 'Sent âœ“';
-      e.target.reset();
-    } else {
-      btn.textContent = 'Error â€” Try Again';
-      btn.disabled = false;
-    }
-  }
+// PORTFOLIO FILTER
+function fp(cat,btn){
+  document.querySelectorAll('.filt').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.pi').forEach(item=>{item.style.display=(cat==='all'||item.dataset.cat===cat)?'':'none'});
+}
+
+// LIGHTBOX
+let lbi=[],lbn=0;
+function olb(el){
+  const img=el.querySelector('.pi-img');if(!img)return;
+  lbi=Array.from(document.querySelectorAll('.pi:not(.wc) .pi-img'));
+  lbn=lbi.indexOf(img);slb();
+  document.getElementById('lb').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function slb(){document.getElementById('lb-img').src=lbi[lbn].src;document.getElementById('lb-cap').textContent=lbi[lbn].alt}
+document.getElementById('lb-x').onclick=()=>{document.getElementById('lb').classList.remove('open');document.body.style.overflow=''};
+document.getElementById('lb-p').onclick=()=>{lbn=(lbn-1+lbi.length)%lbi.length;slb()};
+document.getElementById('lb-n').onclick=()=>{lbn=(lbn+1)%lbi.length;slb()};
+document.getElementById('lb').addEventListener('click',e=>{if(e.target===e.currentTarget){e.currentTarget.classList.remove('open');document.body.style.overflow=''}});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')document.getElementById('lb-p').click();if(e.key==='ArrowRight')document.getElementById('lb-n').click();if(e.key==='Escape')document.getElementById('lb-x').click()});
+
+// CONTACT FORM
+async function sendForm(e){
+  e.preventDefault();const btn=e.target.querySelector('.csend');
+  btn.textContent='Sending...';btn.disabled=true;
+  const r=await fetch('https://formspree.io/f/mdalljle',{method:'POST',body:new FormData(e.target),headers:{Accept:'application/json'}});
+  if(r.ok){document.getElementById('cok').style.display='block';btn.textContent='Sent ✓';e.target.reset()}
+  else{btn.textContent='Error — Try Again';btn.disabled=false}
+}
 </script>
-
 </body>
 </html>
